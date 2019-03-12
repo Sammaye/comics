@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../laravel-flash" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../laravel-gridview" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../laravel-permissions" vcs="Git" />
+  </component>
+</project>

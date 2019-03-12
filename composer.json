@@ -1,0 +1,9 @@
+{
+    "require": {
+        "sammaye/laravel-gridview": "@dev",
+        "sammaye/laravel-flash": "@dev",
+        "sammaye/laravel-permission": "@dev",
+        "sammaye/laravel-mongodb": "@dev",
+        "jenssegers/mongodb-session": "^1.2"
+    }
+}
