@@ -134,7 +134,4 @@
       </profile-state>
     </entry>
   </component>
-  <component name="TerminalProjectOptionsProvider">
-    <option name="myStartingDirectory" value="C:\Windows\System32\WindowsPowerShell\v1.0\" />
-  </component>
 </project>

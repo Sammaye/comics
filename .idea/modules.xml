@@ -5,7 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/comics.iml" filepath="$PROJECT_DIR$/.idea/comics.iml" />
       <module fileurl="file://$PROJECT_DIR$/../laravel-flash/.idea/laravel-flash.iml" filepath="$PROJECT_DIR$/../laravel-flash/.idea/laravel-flash.iml" />
       <module fileurl="file://$PROJECT_DIR$/../laravel-gridview/.idea/laravel-gridview.iml" filepath="$PROJECT_DIR$/../laravel-gridview/.idea/laravel-gridview.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../laravel-mongodb/.idea/laravel-mongodb.iml" filepath="$PROJECT_DIR$/../laravel-mongodb/.idea/laravel-mongodb.iml" />
       <module fileurl="file://$PROJECT_DIR$/../laravel-permissions/.idea/laravel-permissions.iml" filepath="$PROJECT_DIR$/../laravel-permissions/.idea/laravel-permissions.iml" />
     </modules>
   </component>
