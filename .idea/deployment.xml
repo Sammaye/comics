@@ -2,7 +2,7 @@
 <project version="4">
   <component name="PublishConfigData">
     <serverData>
-      <paths name="ClassCharts Artichocke v2 (GCloud)">
+      <paths name="ClassCharts Artichocke">
         <serverdata>
           <mappings>
             <mapping local="$PROJECT_DIR$" web="/" />
@@ -93,13 +93,6 @@
           </mappings>
         </serverdata>
       </paths>
-      <paths name="ProvisionMap Butternut Staging (GCloud)">
-        <serverdata>
-          <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
       <paths name="ProvisionMap Carrot Test Server">
         <serverdata>
           <mappings>
@@ -114,21 +107,7 @@
           </mappings>
         </serverdata>
       </paths>
-      <paths name="ProvisionMap Production Server">
-        <serverdata>
-          <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
       <paths name="ProvisionMap Sync Server">
-        <serverdata>
-          <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="ProvisionMap Sync Server (GCloud)">
         <serverdata>
           <mappings>
             <mapping local="$PROJECT_DIR$" web="/" />

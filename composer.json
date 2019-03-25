@@ -19,6 +19,7 @@
         "jenssegers/mongodb": "^3.5",
         "jenssegers/mongodb-session": "^1.2",
         "laravel/framework": "5.8.*",
+        "laravel/socialite": "^4.1",
         "laravel/tinker": "^1.0",
         "sammaye/laravel-flash": "dev-master",
         "sammaye/laravel-gridview": "dev-master",
