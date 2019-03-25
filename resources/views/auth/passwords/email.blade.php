@@ -1,9 +1,11 @@
 @extends('layouts.app')
-
+@section('title', __('Forgot Password'))
 @section('content')
-<div class="container">
+<div class="container py-4">
+    <h1 class="text-center">{{ __('Forgot Your Password?') }}</h1>
+    <p class="text-muted text-center mb-4">{{ __('No Problem! Just tell us your e-email address...') }}</p>
     <div class="row justify-content-center">
-        <div class="col">
+        <div class="col-sm-30 col-md-22 col-lg-15">
             @if (session('status'))
                 <div class="alert alert-success" role="alert">
                     {{ session('status') }}
@@ -28,7 +30,7 @@
                 </div>
 
                 <div class="form-group mb-0">
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-outline-success btn-lg btn-block">
                         {{ __('Send Password Reset Link') }}
                     </button>
                 </div>

@@ -1,0 +1,14 @@
+.container-help {
+  .head {
+    background-color: #f8f9fa;
+    margin-bottom: 20px;
+  }
+
+  .faq-item {
+    margin-bottom: 30px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

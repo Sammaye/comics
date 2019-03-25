@@ -7,7 +7,15 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', e(config('app.name', 'Laravel')))</title>
+    @if (View::hasSection('title'))
+        <title>{{ config('app.name', 'Laravel') }} - @yield('title')</title>
+    @else
+        <title>{{ config('app.name', 'Laravel') }}</title>
+    @endif
+
+    @if (View::hasSection('description'))
+        <meta name="description" content="@yield('description')">
+    @endif
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -38,11 +46,11 @@
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
                         @guest
-                            <li class="nav-item">
+                            <li class="nav-item{{ Route::currentRouteName() === 'login' ? ' active' : '' }}">
                                 <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                             </li>
                             @if (Route::has('register'))
-                                <li class="nav-item">
+                                <li class="nav-item{{ Route::currentRouteName() === 'register' ? ' active' : '' }}">
                                     <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                                 </li>
                             @endif
@@ -74,12 +82,17 @@
                                 </div>
                             </li>
                         @endguest
+                        <li class="nav-item{{ Route::currentRouteName() === 'help' ? ' active' : '' }}">
+                            <a class="nav-link" href="{{ route('help') }}">
+                                {{ __('Help') }}
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </nav>
-
-        <main class="py-4">
+        @include('flash::flash', ['class' => 'mb-0 alert-sticky-flash'])
+        <main class="@yield('container')">
             @yield('content')
         </main>
     </div>

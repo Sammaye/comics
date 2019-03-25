@@ -166,6 +166,7 @@ return [
          * Package Service Providers...
          */
         Jenssegers\Mongodb\MongodbServiceProvider::class,
+        \Jenssegers\Mongodb\Auth\PasswordResetServiceProvider::class,
         \Jenssegers\Mongodb\Session\SessionServiceProvider::class,
 
         /*
@@ -229,5 +230,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
     ],
+
+    'support_email' => 'comics@sammaye.com',
 
 ];

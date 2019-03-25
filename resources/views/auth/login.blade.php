@@ -1,10 +1,11 @@
 @extends('layouts.app')
-
+@section('title', 'Let\'s Get You In')
+@section('container', 'container-login')
 @section('content')
-<div class="container">
+<div class="container py-4">
     <div class="row justify-content-center">
-        <div class="col">
-            <form method="POST" action="{{ route('login') }}">
+        <div class="col-sm-30 col-md-22 col-lg-15">
+            <form method="POST" action="{{ route('login') }}" class="form-login">
                 @csrf
 
                 <div class="form-group">
@@ -36,25 +37,32 @@
                 </div>
 
                 <div class="form-group">
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-
-                            <label class="form-check-label" for="remember">
-                                {{ __('Remember Me') }}
-                            </label>
-                        </div>
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               name="remember"
+                               id="remember" {{ old('remember') ? 'checked' : '' }}
+                        >
+                        <label class="form-check-label" for="remember">
+                            {{ __('Remember Me') }}
+                        </label>
+                    </div>
                 </div>
 
                 <div class="form-group mb-0">
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-outline-success btn-lg btn-block">
                         {{ __('Login') }}
                     </button>
 
                     @if (Route::has('password.request'))
-                        <a class="btn btn-link" href="{{ route('password.request') }}">
+                        <a class="btn btn-link btn-block" href="{{ route('password.request') }}">
                             {{ __('Forgot Your Password?') }}
                         </a>
                     @endif
+                </div>
+                <div class="sso-login-methods">
+                    <a href="{{ route('facebookLogin') }}" class="btn-facebook-login btn btn-link">Facebook</a>
+                    <a href="{{ route('googleLogin') }}" class="btn-google-login btn btn-link">Google</a>
                 </div>
             </form>
         </div>

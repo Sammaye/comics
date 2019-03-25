@@ -14,7 +14,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth')->except(['index']);
+        $this->middleware('auth')->except(['index', 'help']);
     }
 
     /**
@@ -25,8 +25,13 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         if (!$request->user()) {
-            return redirect()->route('register');
+            return view('index');
         }
         return view('home');
+    }
+
+    public function help(Request $request)
+    {
+        return view('help');
     }
 }

@@ -12,9 +12,10 @@
 */
 
 Route::get('/', 'HomeController@index')->name('home');
+Route::get('/help', 'HomeController@help')->name('help');
 
 Auth::routes();
-Route::get('login/facebook', 'Auth\LoginController@redirectToFacebook');
+Route::get('login/facebook', 'Auth\LoginController@redirectToFacebook')->name('facebookLogin');
 Route::get('login/facebook/callback', 'Auth\LoginController@handleFacebookCallback');
-Route::get('login/google', 'Auth\LoginController@redirectToGoogle');
+Route::get('login/google', 'Auth\LoginController@redirectToGoogle')->name('googleLogin');
 Route::get('login/google/callback', 'Auth\LoginController@handleGoogleCallback');

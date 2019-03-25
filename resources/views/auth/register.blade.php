@@ -1,10 +1,12 @@
 @extends('layouts.app')
-
+@section('container', 'container-register')
+@section('title', __('Let\'s Get You Started'))
 @section('content')
-<div class="container">
+<div class="container py-4">
+    <h1 class="text-center mb-4">Let's Get You Started</h1>
     <div class="row justify-content-center">
-        <div class="col">
-            <form method="POST" action="{{ route('register') }}">
+        <div class="col-sm-30 col-md-22 col-lg-15">
+            <form method="POST" action="{{ route('register') }}" class="form-register">
                 @csrf
 
                 <div class="form-group">
@@ -60,10 +62,14 @@
                     >
                 </div>
 
-                <div class="form-group mb-0">
-                    <button type="submit" class="btn btn-primary">
+                <div class="form-group mb-0 text-center">
+                    <button type="submit" class="btn btn-lg btn-outline-success">
                         {{ __('Register') }}
                     </button>
+                </div>
+                <div class="sso-login-methods">
+                    <a href="{{ route('facebookLogin') }}" class="btn-facebook-login btn btn-link">Facebook</a>
+                    <a href="{{ route('googleLogin') }}" class="btn-google-login btn btn-link">Google</a>
                 </div>
             </form>
         </div>

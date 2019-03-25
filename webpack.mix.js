@@ -10,7 +10,9 @@ const mix = require('laravel-mix');
  | file for the application as well as bundling up all the JS files.
  |
  */
-
+mix.browserSync('192.168.1.21');
+mix.setPublicPath('public');
+mix.setResourceRoot('../');
 mix.js('resources/js/app.js', 'public/js')
     .sourceMaps()
    .sass('resources/sass/app.scss', 'public/css');
