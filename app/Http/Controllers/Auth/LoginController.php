@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Exceptions\GoogleUserMismatch;
 use App\Http\Controllers\Controller;
+use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
+use sammaye\Flash\Support\Flash;
 
 class LoginController extends Controller
 {
@@ -55,6 +59,37 @@ class LoginController extends Controller
 
     public function handleGoogleCallback()
     {
-        $user = Socialite::driver('google')->user();
+        $google_user = Socialite::driver('google')->user();
+
+        if (!$google_user->email) {
+            Flash::error(__('Your Google account has no email, please add one'));
+            return redirect()
+                ->route('register');
+        }
+
+        if (!$google_user->user['email_verified']) {
+            Flash::error(__('Your Google account email is not verified, please verify it'));
+            return redirect()
+                ->route('register');
+        }
+
+        $email_user = User::query()->where('email', $google_user->email)->first();
+        $id_user = User::query()->where('google_id', $google_user->id)->first();
+
+        if ($id_user && $email_user && !$email_user->is($id_user)) {
+            throw new GoogleUserMismatch;
+        }
+
+        $user = User::updateOrCreate(
+            ['email' => $google_user->email],
+            [
+                'username' => Str::slug($google_user->name, '_') . rand(100, 3234567),
+                'google_id' => $google_user->id,
+
+            ]
+        );
+
+        $this->guard()->login($user);
+        return redirect()->intended($this->redirectPath());
     }
 }

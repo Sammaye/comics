@@ -100,8 +100,7 @@
                 <div class="faq-item">
                     <span id="profit" class="head-anchor"></span>
                     <h3>Does this site earn money?</h3>
-                    <p>No.</p>
-                    <p>This site is non-profit. It makes no money from its services, no even in advertising.</p>
+                    <p>No, this site is non-profit. It makes no money from its services.</p>
                 </div>
 
                 <div class="faq-item">
