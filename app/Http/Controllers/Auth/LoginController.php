@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Exceptions\FacebookUserMismatch;
 use App\Exceptions\GoogleUserMismatch;
 use App\Http\Controllers\Controller;
 use App\User;
@@ -49,7 +50,32 @@ class LoginController extends Controller
 
     public function handleFacebookCallback()
     {
-        $user = Socialite::driver('facebook')->user();
+        $facebook_user = Socialite::driver('facebook')->user();
+
+        if (!$facebook_user->email) {
+            Flash::error(__('Your Facebook account has no email, please add one'));
+            return redirect()
+                ->route('register');
+        }
+
+        $email_user = User::query()->where('email', $facebook_user->email)->first();
+        $id_user = User::query()->where('facebook_id', $facebook_user->id)->first();
+
+        if ($id_user && $email_user && !$email_user->is($id_user)) {
+            throw new FacebookUserMismatch;
+        }
+
+        $user = User::updateOrCreate(
+            ['email' => $facebook_user->email],
+            [
+                'username' => Str::slug($facebook_user->name, '_') . rand(100, 3234567),
+                'facebook_id' => $facebook_user->id,
+
+            ]
+        );
+
+        $this->guard()->login($user);
+        return redirect()->intended($this->redirectPath());
     }
 
     public function redirectToGoogle()
