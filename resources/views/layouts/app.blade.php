@@ -46,6 +46,9 @@
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
                         @guest
+                            <li class="nav-item{{ Route::currentRouteName() === 'comic.view' ? ' active' : '' }}">
+                                <a class="nav-link" href="{{ route('comic.view') }}">{{ __('Comic Archive') }}</a>
+                            </li>
                             <li class="nav-item{{ Route::currentRouteName() === 'login' ? ' active' : '' }}">
                                 <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                             </li>

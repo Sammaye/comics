@@ -5,10 +5,11 @@ namespace App;
 use Jenssegers\Mongodb\Auth\User as Authenticatable;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Notifications\Notifiable;
+use sammaye\Permission\Traits\HasPermissions;
 
 class User extends Authenticatable{
 
-    use MustVerifyEmail, Notifiable;
+    use MustVerifyEmail, Notifiable, HasPermissions;
 
     /**
      * The attributes that are mass assignable.

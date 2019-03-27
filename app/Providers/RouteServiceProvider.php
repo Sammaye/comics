@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Comic;
+use App\ComicStrip;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
@@ -23,7 +25,13 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Route::bind('comic', function ($value) {
+            return Comic::query()->where('id', $value)->firstOrFail();
+        });
+
+        Route::bind('strip', function ($value) {
+            return ComicStrip::query()->where('id', $value)->firstOrFail();
+        });
 
         parent::boot();
     }

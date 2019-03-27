@@ -14,8 +14,42 @@
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/help', 'HomeController@help')->name('help');
 
-Auth::routes();
-Route::get('login/facebook', 'Auth\LoginController@redirectToFacebook')->name('facebookLogin');
-Route::get('login/facebook/callback', 'Auth\LoginController@handleFacebookCallback');
-Route::get('login/google', 'Auth\LoginController@redirectToGoogle')->name('googleLogin');
-Route::get('login/google/callback', 'Auth\LoginController@handleGoogleCallback');
+Auth::routes([
+    'verify' => true,
+]);
+Route::get('login/facebook', 'Auth\LoginController@redirectToFacebook')
+    ->name('facebookLogin');
+Route::get('login/facebook/callback',
+    'Auth\LoginController@handleFacebookCallback');
+Route::get('login/google', 'Auth\LoginController@redirectToGoogle')
+    ->name('googleLogin');
+Route::get('login/google/callback',
+    'Auth\LoginController@handleGoogleCallback');
+
+Route::resource('user', 'UserController')->except([
+    'index',
+    'create',
+    'store',
+    'show',
+]);
+
+Route::prefix('comic')->name('comic.')->group(function () {
+    Route::get('view', 'ComicController@view')->name('view');
+    Route::get('{comic}/subscribe', 'ComicController@subscribe')->name('subscribe');
+    Route::get('{comic}/unsubscribe', 'ComicController@unsubscribe')->name('unsubscribe');
+    Route::post('request', 'ComicController@request')->name('request');
+    Route::get('{strip}/image', 'ComicController@getStripImage')->name('image');
+});
+
+Route::namespace('Admin')
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::middleware('can:admin-user')->group(function () {
+            Route::resource('user', 'UserController');
+        });
+
+        Route::middleware('can:admin-comic')->group(function () {
+            Route::resource('comic', 'ComicController');
+        });
+    });
