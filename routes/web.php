@@ -46,7 +46,7 @@ Route::namespace('Admin')
     ->name('admin.')
     ->group(function () {
         Route::middleware('can:admin-user')->group(function () {
-            Route::resource('user', 'UserController');
+            Route::resource('user', 'UserController')->except(['show']);
         });
 
         Route::middleware('can:admin-comic')->group(function () {

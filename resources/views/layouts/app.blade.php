@@ -68,10 +68,22 @@
                                    aria-expanded="false"
                                    v-pre
                                 >
-                                    {{ __('Settings') }} <span class="caret"></span>
+                                    {{ __('Account') }} <span class="caret"></span>
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item{{ Route::currentRouteName() === 'user.edit' ? ' active' : '' }}"
+                                       href="{{ route('user.edit', ['user' => Auth::user()]) }}"
+                                    >
+                                        {{ __('Settings') }}
+                                    </a>
+                                    @can('admin-users')
+                                        <a class="dropdown-item{{ Route::currentRouteName() === 'admin.user.index' ? ' active' : '' }}"
+                                           href="{{ route('admin.user.index') }}"
+                                        >
+                                            {{ __('Admin Users') }}
+                                        </a>
+                                    @endcan
                                     <a class="dropdown-item"
                                        href="{{ route('logout') }}"
                                        onclick="event.preventDefault();document.getElementById('logout-form').submit();"
@@ -94,6 +106,28 @@
                 </div>
             </div>
         </nav>
+        @if (session('resent'))
+            <div class="alert alert-warning mb-0 alert-sticky-flash" role="alert">
+                <div class="container">
+                    {{ __('A fresh verification link has been sent to your E-Mail address.') }}
+                </div>
+            </div>
+        @elseif(session('verified'))
+            <div class="alert alert-success mb-0 alert-sticky-flash" role="alert">
+                <div class="container">
+                    {{ __('Your E-Mail address is now verified, thank you!') }}
+                </div>
+            </div>
+        @elseif(Auth::user() && !Auth::user()->hasVerifiedEmail())
+            <div class="alert alert-danger mb-0 alert-sticky-flash" role="alert">
+                <div  class="container">
+                    {!! __(
+                        'You must verify your E-Mail address before receiving E-Mails, <a href=":url">please click here to verify</a>',
+                        ['url' => route('verification.resend')]
+                    ) !!}
+                </div>
+            </div>
+        @endif
         @include('flash::flash', ['class' => 'mb-0 alert-sticky-flash'])
         <main class="@yield('container')">
             @yield('content')

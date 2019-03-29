@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.90.10",
+            "version": "3.90.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "59ffa2a23553dfc4ed5a4f609377bd1881370ad6"
+                "reference": "a628927d3a350fbda308eadea88d9d4845aa1c44"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/59ffa2a23553dfc4ed5a4f609377bd1881370ad6",
-                "reference": "59ffa2a23553dfc4ed5a4f609377bd1881370ad6",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/a628927d3a350fbda308eadea88d9d4845aa1c44",
+                "reference": "a628927d3a350fbda308eadea88d9d4845aa1c44",
                 "shasum": ""
             },
             "require": {
@@ -86,7 +86,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2019-03-26T18:29:19+00:00"
+            "time": "2019-03-28T18:10:49+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -2174,12 +2174,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sammaye/laravel-gridview.git",
-                "reference": "881c95262f872f9a7953a447fd4f7d8e38b09efc"
+                "reference": "ff4914cbd211c100cd0e0e46bc7249bfb8fdaa39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Sammaye/laravel-gridview/zipball/881c95262f872f9a7953a447fd4f7d8e38b09efc",
-                "reference": "881c95262f872f9a7953a447fd4f7d8e38b09efc",
+                "url": "https://api.github.com/repos/Sammaye/laravel-gridview/zipball/ff4914cbd211c100cd0e0e46bc7249bfb8fdaa39",
+                "reference": "ff4914cbd211c100cd0e0e46bc7249bfb8fdaa39",
                 "shasum": ""
             },
             "require": {
@@ -2213,7 +2213,7 @@
             "keywords": [
                 "laravel"
             ],
-            "time": "2019-03-08T20:18:12+00:00"
+            "time": "2019-03-29T00:30:56+00:00"
         },
         {
             "name": "sammaye/laravel-permission",
@@ -2221,12 +2221,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sammaye/laravel-permission.git",
-                "reference": "4b59629bd7f75bf0f46d359c80a2af5b348c4a58"
+                "reference": "eb2b5fabb95d77365d895132abac020202a62a85"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Sammaye/laravel-permission/zipball/4b59629bd7f75bf0f46d359c80a2af5b348c4a58",
-                "reference": "4b59629bd7f75bf0f46d359c80a2af5b348c4a58",
+                "url": "https://api.github.com/repos/Sammaye/laravel-permission/zipball/eb2b5fabb95d77365d895132abac020202a62a85",
+                "reference": "eb2b5fabb95d77365d895132abac020202a62a85",
                 "shasum": ""
             },
             "require": {
@@ -2261,7 +2261,7 @@
             "keywords": [
                 "laravel"
             ],
-            "time": "2019-03-26T23:22:37+00:00"
+            "time": "2019-03-29T00:31:28+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",

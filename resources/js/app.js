@@ -31,3 +31,9 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 const app = new Vue({
     el: '#app'
 });
+
+$(document).on('keypress', '.gridview thead input',  function(e){
+    if (e.which == 13) {
+        window.location = $(this).parents('tr').attr('data-action') + '?' + $(this).parents('tr').find('input').serialize();
+    }
+});

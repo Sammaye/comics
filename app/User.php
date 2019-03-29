@@ -11,15 +11,20 @@ class User extends Authenticatable{
 
     use MustVerifyEmail, Notifiable, HasPermissions;
 
+    protected $attributes = [
+        'email_frequency' => 'daily',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name',
+        'username',
         'email',
         'password',
+        'email_frequency',
         'google_id',
         'facebook_id',
     ];
@@ -41,5 +46,21 @@ class User extends Authenticatable{
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'blocked_at' => 'datetime',
     ];
+
+    public function getEmailFrequencies()
+    {
+        return [
+            'daily' => __('Daily'),
+            'weekly' => __('Weekly'),
+            'monthly' => __('Monthly'),
+            'paused' => __('Paused'),
+        ];
+    }
+
+    public function isBlocked()
+    {
+        return !is_null($this->blocked_at);
+    }
 }
