@@ -26,11 +26,11 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         Route::bind('comic', function ($value) {
-            return Comic::query()->where('id', $value)->firstOrFail();
+            return Comic::query()->where('_id', $value)->firstOrFail();
         });
 
         Route::bind('strip', function ($value) {
-            return ComicStrip::query()->where('id', $value)->firstOrFail();
+            return ComicStrip::query()->where('_id', $value)->firstOrFail();
         });
 
         parent::boot();

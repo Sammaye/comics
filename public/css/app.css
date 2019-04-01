@@ -19079,3 +19079,7 @@ readers do not read off random characters that represent icons */
   margin-bottom: 0;
 }
 
+.container-admin-comic-create hr {
+  border-top: 1px solid #f1f3f5;
+}
+

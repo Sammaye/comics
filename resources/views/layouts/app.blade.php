@@ -46,8 +46,8 @@
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
                         @guest
-                            <li class="nav-item{{ Route::currentRouteName() === 'comic.view' ? ' active' : '' }}">
-                                <a class="nav-link" href="{{ route('comic.view') }}">{{ __('Comic Archive') }}</a>
+                            <li class="nav-item{{ Route::currentRouteName() === 'comic.index' ? ' active' : '' }}">
+                                <a class="nav-link" href="{{ route('comic.index') }}">{{ __('Comic Archive') }}</a>
                             </li>
                             <li class="nav-item{{ Route::currentRouteName() === 'login' ? ' active' : '' }}">
                                 <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
@@ -77,11 +77,18 @@
                                     >
                                         {{ __('Settings') }}
                                     </a>
-                                    @can('admin-users')
+                                    @can('admin-user')
                                         <a class="dropdown-item{{ Route::currentRouteName() === 'admin.user.index' ? ' active' : '' }}"
                                            href="{{ route('admin.user.index') }}"
                                         >
                                             {{ __('Admin Users') }}
+                                        </a>
+                                    @endcan
+                                    @can('admin-comic')
+                                        <a class="dropdown-item{{ Route::currentRouteName() === 'admin.comic.index' ? ' active' : '' }}"
+                                           href="{{ route('admin.comic.index') }}"
+                                        >
+                                            {{ __('Admin Comics') }}
                                         </a>
                                     @endcan
                                     <a class="dropdown-item"

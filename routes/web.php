@@ -34,7 +34,8 @@ Route::resource('user', 'UserController')->except([
 ]);
 
 Route::prefix('comic')->name('comic.')->group(function () {
-    Route::get('view', 'ComicController@view')->name('view');
+    Route::get('view', 'ComicController@view')->name('index');
+    Route::get('view/{comic}', 'ComicController@view')->name('view');
     Route::get('{comic}/subscribe', 'ComicController@subscribe')->name('subscribe');
     Route::get('{comic}/unsubscribe', 'ComicController@unsubscribe')->name('unsubscribe');
     Route::post('request', 'ComicController@request')->name('request');
