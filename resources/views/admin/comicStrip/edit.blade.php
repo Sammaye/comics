@@ -8,13 +8,6 @@
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.comic.index') }}">Comics</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('admin.comic.edit', ['comic' => $model->comic]) }}">{{ $model->comic->title }}</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ __('Update Strip') }}</li>
-                    </ol>
-                </nav>
                 <h1 class="mb-4 text-truncate">{{ __(
                     'Edit Comic Strip #:id for :comic',
                     ['id' => $model->id, 'comic' => $model->comic->title]

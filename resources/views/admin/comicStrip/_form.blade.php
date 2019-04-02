@@ -2,6 +2,14 @@
 <div class="row">
     <div class="col">
         <div class="form-group">
+            <label for="comic">{{ __('Comic') }}</label>
+            <a class="d-block"
+               href="{{ route('admin.comic.edit', ['comic' => $model->comic]) }}"
+            >
+                {{ $model->comic->title }}
+            </a>
+        </div>
+        <div class="form-group">
             <label for="url">{{ __('Url') }}</label>
             <input id="url"
                    type="text"
