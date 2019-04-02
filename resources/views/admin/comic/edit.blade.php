@@ -42,7 +42,13 @@
                         \sammaye\Grid\Column::make('image_url'),
                         \sammaye\Grid\Column::make('image_md5')
                             ->setFilterCell(false),
-                        \sammaye\Grid\Column::make('index'),
+                        \sammaye\Grid\Column::make('index')
+                            ->setDataContent(function($column, $row){
+                                if ($row->index instanceof \Carbon\Carbon) {
+                                    return $row->index->format('Y-m-d');
+                                }
+                                return $row->index;
+                            }),
                         \sammaye\Grid\Column::make('created_at')
                             ->setFilterCell(false),
                         \sammaye\Grid\Column::make('updated_at')
