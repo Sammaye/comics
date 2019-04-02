@@ -248,6 +248,7 @@ class UserController extends Controller
     {
         $user->delete();
 
+        Flash::success(__('User Deleted'));
         return redirect()
             ->route('admin.user.index');
     }

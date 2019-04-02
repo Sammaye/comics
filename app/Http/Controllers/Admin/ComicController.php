@@ -100,7 +100,7 @@ class ComicController extends Controller
     public function edit(Comic $comic)
     {
         $comicStrips = ComicStrip::query()
-            ->where('_id', $comic->_id)
+            ->where('comic_id', $comic->_id)
             ->orderBy('created_at', 'DESC');
 
         return view('admin.comic.edit')
@@ -124,7 +124,7 @@ class ComicController extends Controller
 
         if ($validator->fails()) {
             return redirect()
-                ->route('admin.comic.create')
+                ->route('admin.comic.edit', ['comic' => $comic])
                 ->withInput()
                 ->withErrors($validator);
         }
@@ -151,6 +151,7 @@ class ComicController extends Controller
     {
         $comic->delete();
 
+        Flash::success(__('Comic Deleted'));
         return redirect()
             ->route('admin.comic.index');
     }

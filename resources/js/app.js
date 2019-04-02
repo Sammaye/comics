@@ -37,3 +37,9 @@ $(document).on('keypress', '.gridview thead input',  function(e){
         window.location = $(this).parents('tr').attr('data-action') + '?' + $(this).parents('tr').find('input').serialize();
     }
 });
+
+$(document).on('change', '#scraper_user_agent_prefill', function(e){
+    if ($(this).val()) {
+        $('#scraper_user_agent').val($(this).val());
+    }
+})

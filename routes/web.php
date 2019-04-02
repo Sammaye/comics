@@ -51,6 +51,14 @@ Route::namespace('Admin')
         });
 
         Route::middleware('can:admin-comic')->group(function () {
+            Route::get('comic/{comic}/add-strip', 'ComicStripController@create')->name('comicStrip.create');
             Route::resource('comic', 'ComicController');
+            Route::get('comicStrip/{comicStrip}/image', 'ComicStripController@image')->name('comicStrip.image');
+            Route::get('comicStrip/{comicStrip}/refresh', 'ComicStripController@refresh')->name('comicStrip.refresh');
+            Route::resource('comicStrip', 'ComicStripController')->except([
+                'create',
+                'index',
+                'show',
+            ]);
         });
     });

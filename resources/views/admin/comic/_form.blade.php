@@ -43,9 +43,7 @@
                    type="text"
                    class="form-control{{ $errors->has('title') ? ' is-invalid' : '' }}"
                    name="description"
-            >
-                {{ old('description', $model->description) }}
-            </textarea>
+            >{{ old('description', $model->description) }}</textarea>
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $errors->first('description') }}</strong>
             </span>

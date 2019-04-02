@@ -29,7 +29,7 @@ class RouteServiceProvider extends ServiceProvider
             return Comic::query()->where('_id', $value)->firstOrFail();
         });
 
-        Route::bind('strip', function ($value) {
+        Route::bind('comicStrip', function ($value) {
             return ComicStrip::query()->where('_id', $value)->firstOrFail();
         });
 

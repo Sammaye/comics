@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Scrapers\BaseScraper;
+use App\Traits\FuzzyDates;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
@@ -19,11 +20,12 @@ use MongoDB\BSON\UTCDateTime;
 
 class Comic extends Model
 {
+    use FuzzyDates;
+
     const TYPE_DATE = 0;
     const TYPE_ID = 2;
 
-    private $installedScrapers;
-    private $scraperObject;
+    protected $collection = 'comic';
 
     protected $userAgents = [
         'Google Bot' => 'Googlebot/2.1 (http://www.googlebot.com/bot.html)',
@@ -60,13 +62,15 @@ class Comic extends Model
         'live',
         'classic_edition',
         'last_checked',
-        'updated_at',
-        'created_at'
     ];
 
     protected $casts = [
         'last_checked' => 'datetime',
     ];
+
+    private $installedScrapers;
+    private $scraperObject;
+    private $scrapeErrors = [];
 
     public function __construct(array $attributes = [])
     {
@@ -79,31 +83,25 @@ class Comic extends Model
         ] + $attributes);
     }
 
-    public function setAttribute($key, $value)
+    protected static function boot()
     {
-        if ($value instanceof Carbon) {
-            Arr::set($this->attributes, $key, $this->fromDateTime($value));
+        parent::boot();
 
-            return;
-        }
-        return parent::setAttribute($key, $value);
-    }
+        self::creating(function($model){
+            $model->slug = Str::slug($model->title);
+            if ($model->description) {
+                $model->abstract = Str::limit($model->description, 150);
+            }
+        });
 
-    public function getAttributeValue($key)
-    {
-        $value = $this->getAttributeFromArray($key);
-
-        if ($value instanceof UTCDateTime) {
-            return $this->asDateTime($value);
-        }
-
-        return parent::getAttributeValue($key);
-    }
-
-    public function setTitleAttribute($value)
-    {
-        $this->attributes['title'] = $value;
-        $this->attributes['slug'] = Str::slug($value);
+        self::updating(function($model){
+            $model->slug = Str::slug($model->title);
+            if ($model->isDirty('description')) {
+                $model->abstract = Str::limit($model->description, 150);
+            } else {
+                $model->abstract = null;
+            }
+        });
     }
 
     public function strips()
@@ -223,7 +221,7 @@ class Comic extends Model
                 'date_format:d/m/Y',
                 $request->input('active') === 0 ? 'before_or_equal:last_index' : '',
                 function($attribute, $value, $fail) use($request) {
-                    $request->merge([$attribute => Carbon::createFromFormat('d/m/Y', $value)]);
+                    $request->merge([$attribute => Carbon::createFromFormat('!d/m/Y', $value)]);
                 }
             ];
 
@@ -232,7 +230,7 @@ class Comic extends Model
                 'required_if:active,0',
                 'date_format:d/m/Y',
                 function($attribute, $value, $fail) use($request) {
-                    $request->merge([$attribute => Carbon::createFromFormat('d/m/Y', $value)]);
+                    $request->merge([$attribute => Carbon::createFromFormat('!d/m/Y', $value)]);
                 }
             ];
         }
@@ -246,7 +244,7 @@ class Comic extends Model
             if (!$this->scraper) {
                 $this->scraperObject = new BaseScraper($this);
             } elseif (array_key_exists($this->scraper, $this->getScrapers())) {
-                $className = '\App\Scraper\\' . $this->scraper;
+                $className = '\App\Scrapers\\' . $this->scraper;
                 if (!class_exists($className)) {
                     throw new InvalidArgumentException(__(
                         '#:id as an non-existent adapter: :class',
@@ -312,7 +310,7 @@ class Comic extends Model
             $this->base_url ?: $this->homepage,
             PHP_URL_HOST
         );
-        $index = $this->index($index);
+        $index = $this->index($index)->format($this->index_format);
 
         preg_match_all('#\{\$.[^\}]*\}#', $url, $matches);
 
@@ -371,7 +369,7 @@ class Comic extends Model
         $format = $format ?: $this->index_format;
         if (
             $this->type === self::TYPE_DATE &&
-            !$index instanceof UTCDateTime
+            !$index instanceof Carbon
         ) {
             if (!$index) {
                 return null;
@@ -383,9 +381,9 @@ class Comic extends Model
                     ]
                 ])->fails()
             ) {
-                $index = new UTCDateTime(strtotime($index) * 1000);
+                $index = new Carbon(strtotime($index));
                 if ($toString) {
-                    $index = $index->toDateTime();
+                    //$index = $index->toDateTime();
                 }
             } else {
                 throw new InvalidArgumentException(__(

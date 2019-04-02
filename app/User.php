@@ -11,6 +11,8 @@ class User extends Authenticatable{
 
     use MustVerifyEmail, Notifiable, HasPermissions;
 
+    protected $collection = 'user';
+
     protected $attributes = [
         'email_frequency' => 'daily',
     ];
