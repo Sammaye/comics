@@ -1,4 +1,51 @@
+#app {
+  min-height: 100%;
+  height: 100vh;
+}
+
 .alert-sticky-flash {
   border-radius: 0;
   border: 0;
+}
+
+.body-fixed-top {
+  padding-top: rem(56);
+}
+
+.head-anchor {
+  display: block;
+  height: rem(50);
+  margin-top: rem(-50);
+  visibility: hidden;
+}
+
+.sso-login-methods {
+  text-align: center;
+  margin-top: rem(30);
+  padding-top: rem(10);
+  border-top: rem(2) solid #f1f3f5;
+
+  .btn-facebook-login {
+    &:before {
+      font-family: "Font Awesome 5 Brands";
+      content: "\f09a";
+      padding-right: rem(5);
+    }
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  .btn-google-login {
+    &:before {
+      font-family: "Font Awesome 5 Brands";
+      content: "\f1a0";
+      padding-right: rem(5);
+    }
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
 }

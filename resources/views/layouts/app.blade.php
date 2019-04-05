@@ -25,7 +25,7 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-light">
+        <nav class="navbar navbar-expand-md navbar-light bg-light fixed-top">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
@@ -46,8 +46,8 @@
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
                         @guest
-                            <li class="nav-item{{ Route::currentRouteName() === 'comic.index' ? ' active' : '' }}">
-                                <a class="nav-link" href="{{ route('comic.index') }}">{{ __('Comic Archive') }}</a>
+                            <li class="nav-item{{ Route::currentRouteName() === 'comic.view' ? ' active' : '' }}">
+                                <a class="nav-link" href="{{ route('comic.view') }}">{{ __('Comic Archive') }}</a>
                             </li>
                             <li class="nav-item{{ Route::currentRouteName() === 'login' ? ' active' : '' }}">
                                 <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
@@ -58,6 +58,9 @@
                                 </li>
                             @endif
                         @else
+                            <li class="nav-item{{ Route::currentRouteName() === 'comic.view' ? ' active' : '' }}">
+                                <a class="nav-link" href="{{ route('comic.view') }}">{{ __('View Archive') }}</a>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown"
                                    class="nav-link dropdown-toggle"
@@ -135,10 +138,12 @@
                 </div>
             </div>
         @endif
-        @include('flash::flash', ['class' => 'mb-0 alert-sticky-flash'])
-        <main class="@yield('container')">
-            @yield('content')
-        </main>
+        <div class="body-fixed-top">
+            @include('flash::flash', ['class' => 'mb-0 alert-sticky-flash'])
+            <main class="@yield('container')">
+                @yield('content')
+            </main>
+        </div>
     </div>
 </body>
 </html>

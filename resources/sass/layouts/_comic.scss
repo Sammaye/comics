@@ -1,0 +1,56 @@
+.layout-comic {
+  .comic-selector {
+    background: #f1f3f5;
+
+    .select2-container .select2-selection__rendered {
+      background: #fff;
+      font-size: rem(22);
+      font-weight: bold;
+      border-radius: rem(5);
+      padding: rem(8) 0 rem(8) rem(12);
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+      height: rem(48);
+    }
+
+    .select2-container--default .select2-selection--single {
+      border-radius: rem(5);
+    }
+
+    .select2-container--open .select2-selection--single,
+    .select2-container--open .select2-selection__rendered {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .select2-container .select2-selection__rendered span > span {
+      color: #999999;
+      font-size: rem(13);
+      margin-left: rem(10);
+    }
+
+    .select2-container .select2-selection--single {
+      height: rem(50);
+    }
+  }
+}
+
+.layout-comic-select-comic-results{
+  .select2-results li {
+    font-size: rem(16);
+  }
+
+  .select2-results{
+    .select2-results__option--highlighted {
+      background: #337AB7;
+      border-radius: rem(2);
+    }
+
+    .select2-results__option span > span {
+      color: #999999;
+      font-size: rem(12);
+      margin-left: rem(10);
+    }
+  }
+}

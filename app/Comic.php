@@ -9,14 +9,12 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\TransferStats;
-use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use InvalidArgumentException;
 use Jenssegers\Mongodb\Eloquent\Model;
-use MongoDB\BSON\ObjectId;
-use MongoDB\BSON\UTCDateTime;
 
 class Comic extends Model
 {
@@ -288,12 +286,12 @@ class Comic extends Model
     public function indexUrl($index, $protocol = null)
     {
         $index = $this->index($index);
-        return url(
+        return route(
             'comic.view',
             [
                 'comic' => $this,
                 'index' => $this->type === self::TYPE_DATE
-                    ? $index->toDateTime()->format('d-m-Y')
+                    ? $index->format('d-m-Y')
                     : $index
             ]
         );
@@ -364,7 +362,7 @@ class Comic extends Model
         return $this->getCurrentIndexValue() ?? $this->getLastIndexValue();
     }
 
-    public function index($index, $format = null, $toString = false)
+    public function index($index, $format = null)
     {
         $format = $format ?: $this->index_format;
         if (
@@ -382,9 +380,6 @@ class Comic extends Model
                 ])->fails()
             ) {
                 $index = new Carbon(strtotime($index));
-                if ($toString) {
-                    //$index = $index->toDateTime();
-                }
             } else {
                 throw new InvalidArgumentException(__(
                     'The index :index is not a valid date',
@@ -418,10 +413,10 @@ class Comic extends Model
             if (
                 $this->type === self::TYPE_DATE &&
                 (
-                    $requestedIndex->toDateTime()->getTimestamp() > $currentIndex->toDateTime()->getTimestamp() ||
+                    $requestedIndex->getTimestamp() > $currentIndex->getTimestamp() ||
                     (
                         $firstIndex &&
-                        $requestedIndex->toDateTime()->getTimestamp() < $firstIndex->toDateTime()->getTimestamp()
+                        $requestedIndex->getTimestamp() < $firstIndex->getTimestamp()
                     )
                 )
             ) {
@@ -444,8 +439,8 @@ class Comic extends Model
             if (
                 $this->type === self::TYPE_DATE &&
                 (
-                    $requestedIndex->toDateTime()->getTimestamp() > $lastIndex->toDateTime()->getTimestamp() ||
-                    $requestedIndex->toDateTime()->getTimestamp() < $firstIndex->toDateTime()->getTimestamp()
+                    $requestedIndex->getTimestamp() > $lastIndex->getTimestamp() ||
+                    $requestedIndex->getTimestamp() < $firstIndex->getTimestamp()
                 )
             ) {
                 return true;
@@ -509,12 +504,7 @@ class Comic extends Model
 
         $previousIndex = null;
         if ($this->type === self::TYPE_DATE) {
-            $previousIndex = new UTCDateTime(
-                $index
-                    ->toDateTime()
-                    ->modify('-' . ($this->index_step ?: '1 day'))
-                    ->getTimestamp() * 1000
-            );
+            $previousIndex = $index->modify('-' . ($this->index_step ?: '1 day'));
         } elseif ($this->type === self::TYPE_ID && $this->isIndexInt($index)) {
             $previousIndex = $index - ($this->index_step ?: 1);
         }
@@ -563,12 +553,7 @@ class Comic extends Model
 
         $nextIndex = null;
         if ($this->type === self::TYPE_DATE) {
-            $nextIndex = new UTCDateTime(
-                $index
-                    ->toDateTime()
-                    ->modify("+" . ($this->index_step ?: '1 day'))
-                    ->getTimestamp() * 1000
-            );
+            $nextIndex = $index->modify("+" . ($this->index_step ?: '1 day'));
         } elseif ($this->type === self::TYPE_ID && $this->isIndexInt($index)) {
             $nextIndex = $index + ($this->index_step ?: 1);
         }
@@ -608,8 +593,9 @@ class Comic extends Model
         } elseif ($scrape) {
             if (!$model) {
                 $model = ComicStrip::create([
-                    'comic_id' => $this->_id,
                     'index' => $index,
+                ])->forceFill([
+                    'comic_id' => $this->_id,
                 ]);
 
                 foreach ($data as $k => $v) {
@@ -660,7 +646,7 @@ class Comic extends Model
             );
         }
 
-        $timeToday = (new \DateTime('today'))->getTimestamp();
+        $timeToday = new Carbon('today');
 
         do {
             $has_next = false;
@@ -670,7 +656,7 @@ class Comic extends Model
                 (
                     (
                         $this->type === self::TYPE_DATE &&
-                        $this->index($currentStrip->index)->toDateTime()->getTimestamp() === $this->getLastIndexValue()->toDateTime()->getTimestamp()
+                        $this->index($currentStrip->index)->getTimestamp() === $this->getLastIndexValue()->getTimestamp()
                     ) || (
                         $this->type === self::TYPE_ID &&
                         $this->index($currentStrip->index) === $this->getLastIndexValue()
@@ -680,8 +666,8 @@ class Comic extends Model
                 // We rotate the archive going back to first_index
                 $strip = $this->findStrip($this->index($this->first_index));
             } elseif (
-                $currentStrip->date instanceof UTCDateTime &&
-                $currentStrip->date->toDateTime()->getTimestamp() === $timeToday &&
+                $currentStrip->date instanceof Carbon &&
+                $currentStrip->date->getTimestamp() === $timeToday->getTimestamp() &&
                 (!$this->active || $this->classic_edition)
             ) {
                 $strip = $currentStrip;
@@ -689,13 +675,13 @@ class Comic extends Model
                 $strip = $this->next(
                     $currentStrip,
                     true,
-                    ['date' => new UTCDateTime($timeToday * 1000)]
+                    ['date' => $timeToday]
                 );
             }
 
             if ($strip) {
                 $this->current_index = $this->index($strip->index);
-                $this->last_checked = new UTCDateTime($timeToday * 1000);
+                $this->last_checked = $timeToday;
                 if (!$this->save()) {
                     return $this->addScrapeError(
                         ':title(:id) Could not save last checked and current_index for :id',
@@ -816,15 +802,16 @@ class Comic extends Model
         return true;
     }
 
-    public static function renderStripImage($id)
+    public static function getStripImageFilePath($comicStrip, $index = null)
     {
-        if (($pos = strpos($id, '_')) !== false) {
-            $parts = explode('_', $id);
-            $id = $parts[0];
-            $index = $parts[1];
+        if (is_array($comicStrip->img)) {
+            $data = $comicStrip->img[$index ?? 0]->getData();
+        } else {
+            $data = $comicStrip->img->getData();
         }
 
-        $model = ComicStrip::findOrFail(new ObjectId($id));
-        // TODO dunno
+        $filename = uniqid('comic_strip_', true);
+        Storage::disk('local')->put($filename, $data);
+        return Storage::disk('local')->path($filename);
     }
 }

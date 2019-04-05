@@ -2,7 +2,7 @@
   background: url('../images/garfield-ribbon.jpg') #e74a39;
   background-repeat: no-repeat;
   background-position: center 100%;
-  padding: 20px 0;
+  padding: rem(20) 0;
 
   .message-welcome {
     h1 {
@@ -31,8 +31,8 @@
 
     .sso-login-methods {
       text-align: center;
-      margin-top: 20px;
-      border-top: 2px solid darken(#e74a39, 10%);
+      margin-top: rem(20);
+      border-top: rem(2) solid darken(#e74a39, 10%);
 
       .btn-facebook-login {
         color: #fff;
@@ -40,7 +40,7 @@
         &:before {
           font-family: "Font Awesome 5 Brands";
           content: "\f09a";
-          padding-right: 5px;
+          padding-right: rem(5);
         }
 
         &:hover {
@@ -54,7 +54,7 @@
         &:before {
           font-family: "Font Awesome 5 Brands";
           content: "\f1a0";
-          padding-right: 5px;
+          padding-right: rem(5);
         }
 
         &:hover {

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use MongoDB\BSON\ObjectId;
 use sammaye\Flash\Support\Flash;
 
 class UserController extends Controller
@@ -35,13 +36,32 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         if ($request->input('action') === 'update_subscriptions') {
-            $validator = Validator::make($request->all(), [
-                'email_frequency' => [
-                    'required',
-                    'string',
-                    Rule::in(array_keys($user->getEmailFrequencies())),
+            $validator = Validator::make($request->all(),
+                [
+                    'email_frequency' => [
+                        'required',
+                        'string',
+                        Rule::in(array_keys($user->getEmailFrequencies())),
+                    ],
+                    'comic_subs' => [
+                        'required',
+                        'array',
+                        function($attribute, $value, $fail) {
+                            foreach($value as $item) {
+                                try {
+                                    $item = new ObjectId($item);
+                                } catch(\Throwable $e) {
+                                    $fail(__('Invalid value provided for subscriptions'));
+                                }
+                            }
+                        },
+                    ],
                 ],
-            ]);
+                [],
+                [
+                    'comic_subs' => __('comic subscriptions'),
+                ]
+            );
 
             if ($validator->fails()) {
                 return redirect()
@@ -51,7 +71,7 @@ class UserController extends Controller
             }
 
             $data = $validator->validated();
-            $request->user()->forceFill($data)->save();
+            $request->user()->fill($data)->modifyComics($data['comic_subs'])->save();
 
             Flash::success(__('Subscriptions Updated'));
             return redirect()

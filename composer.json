@@ -15,7 +15,9 @@
     ],
     "require": {
         "php": "^7.1.3",
+        "ext-mongodb": "*",
         "aws/aws-sdk-php": "^3.90",
+        "barryvdh/laravel-debugbar": "^3.2",
         "fideloper/proxy": "^4.0",
         "jenssegers/mongodb": "^3.5",
         "jenssegers/mongodb-session": "^1.2",
@@ -24,8 +26,7 @@
         "laravel/tinker": "^1.0",
         "sammaye/laravel-flash": "dev-master",
         "sammaye/laravel-gridview": "dev-master",
-        "sammaye/laravel-permission": "dev-master",
-        "ext-mongodb": "*"
+        "sammaye/laravel-permission": "dev-master"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

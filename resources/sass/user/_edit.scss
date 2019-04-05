@@ -1,0 +1,12 @@
+.container-user-edit{
+  .list-group-item {
+    > span {
+      margin-top: rem(3);
+      margin-bottom: rem(3);
+    }
+    .btn-unsubscribe {
+      right: rem(8);
+      top: rem(8);
+    }
+  }
+}

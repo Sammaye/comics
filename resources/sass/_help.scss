@@ -1,11 +1,11 @@
 .container-help {
   .head {
     background-color: #f8f9fa;
-    margin-bottom: 20px;
+    margin-bottom: rem(20);
   }
 
   .faq-item {
-    margin-bottom: 30px;
+    margin-bottom: rem(30);
 
     &:last-child {
       margin-bottom: 0;

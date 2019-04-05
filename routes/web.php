@@ -34,12 +34,11 @@ Route::resource('user', 'UserController')->except([
 ]);
 
 Route::prefix('comic')->name('comic.')->group(function () {
-    Route::get('view', 'ComicController@view')->name('index');
-    Route::get('view/{comic}', 'ComicController@view')->name('view');
-    Route::get('{comic}/subscribe', 'ComicController@subscribe')->name('subscribe');
-    Route::get('{comic}/unsubscribe', 'ComicController@unsubscribe')->name('unsubscribe');
+    Route::get('view/{comicId?}/{index?}', 'ComicController@view')->name('view');
+    Route::post('{comic}/subscribe', 'ComicController@subscribe')->name('subscribe');
+    Route::post('{comic}/unsubscribe', 'ComicController@unsubscribe')->name('unsubscribe');
     Route::post('request', 'ComicController@request')->name('request');
-    Route::get('{strip}/image', 'ComicController@getStripImage')->name('image');
+    Route::get('{comicStrip}/image/{index?}', 'ComicController@getStripImage')->name('image');
 });
 
 Route::namespace('Admin')
@@ -53,7 +52,7 @@ Route::namespace('Admin')
         Route::middleware('can:admin-comic')->group(function () {
             Route::get('comic/{comic}/add-strip', 'ComicStripController@create')->name('comicStrip.create');
             Route::resource('comic', 'ComicController');
-            Route::get('comicStrip/{comicStrip}/image', 'ComicStripController@image')->name('comicStrip.image');
+            Route::get('comicStrip/{comicStrip}/image/{index?}', 'ComicStripController@image')->name('comicStrip.image');
             Route::get('comicStrip/{comicStrip}/refresh', 'ComicStripController@refresh')->name('comicStrip.refresh');
             Route::resource('comicStrip', 'ComicStripController')->except([
                 'create',

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title', __('Account Settings'))
-@section('container', 'container-account-settings')
+@section('container', 'container-user-edit')
 @section('content')
 <div class="container py-4">
     <form method="post" action="{{ route('user.update', ['user' => $model]) }}" class="row mb-4">
@@ -10,7 +10,37 @@
             <h2 class="mb-3">{{ __('Subscriptions') }}</h2>
         </div>
         <div class="col-sm-24">
-
+            <div class="form-group">
+                @if (count($model->comics) > 0)
+                    <p>{{ __(
+                        'Hold down (click or touch) on each row and move around to re-order your subscriptions'
+                    ) }}</p>
+                    <ul class="list-group" id="sortable">
+                        @foreach ($model->comics as $k => $comic)
+                            @if ($comic = \App\Comic::find($comic['comic_id']))
+                                <li class="list-group-item position-relative">
+                                    <span class="h5 d-block">{{ $comic->title }}</span>
+                                    <a href="#"
+                                       class="btn btn-outline-danger position-absolute btn-unsubscribe"
+                                    >
+                                        {{ __('Unsubscribe') }}
+                                    </a>
+                                    <input type="hidden" name="comic_subs[]" value="{{ $comic->id }}">
+                                </li>
+                            @endif
+                        @endforeach
+                    </ul>
+                    <span class="invalid-feedback{{ $errors->has('comic_subs') ? ' d-block mt-2' : '' }}"
+                          role="alert"
+                    >
+                        <strong>{{ $errors->first('comic_subs') }}</strong>
+                    </span>
+                @else
+                    <p>{{ __(
+                        'You are currently not subscribed to any comics, pick some and return here to be able to manage them'
+                    )  }}</p>
+                @endif
+            </div>
         </div>
         <div class="col-sm-24">
             <div class="form-group">
@@ -45,8 +75,8 @@
             </div>
         </div>
     </form>
-    <div class="row pb-4">
-        <form method="post" action="{{ route('user.update', ['user' => $model]) }}" class="col-sm-24">
+    <div class="row">
+        <form method="post" action="{{ route('user.update', ['user' => $model]) }}" class="col-sm-24 pb-4">
             @method('PUT')
             @csrf
             <h2 class="mb-3">{{ __('Details') }}</h2>
@@ -84,7 +114,7 @@
                 </button>
             </div>
         </form>
-        <form method="post" action="{{ route('user.update', ['user' => $model]) }}" class="col-sm-24">
+        <form method="post" action="{{ route('user.update', ['user' => $model]) }}" class="col-sm-24 pb-4">
             @method('PUT')
             @csrf
             <h2 class="mb-3">{{ __('Password') }}</h2>

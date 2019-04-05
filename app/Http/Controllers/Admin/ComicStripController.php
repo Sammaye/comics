@@ -152,16 +152,14 @@ class ComicStripController extends Controller
      * @param \Illuminate\Http\Request $request
      * @param \App\ComicStrip          $comicStrip
      *
+     * @param null                     $index
+     *
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
-    public function image(Request $request, ComicStrip $comicStrip)
+    public function image(Request $request, ComicStrip $comicStrip, $index = null)
     {
-        $filename = uniqid('comic_strip_', true);
-        Storage::disk('local')->put($filename, $comicStrip->img->getData());
-        $filepath = Storage::disk('local')->path($filename);
-
         return response()
-            ->file($filepath)
+            ->file($comicStrip->comic->getStripImageFilePath($comicStrip))
             ->deleteFileAfterSend(true);
     }
 

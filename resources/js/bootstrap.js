@@ -11,6 +11,9 @@ try {
     window.Popper = require('popper.js').default;
     window.$ = window.jQuery = require('jquery');
 
+    require('jquery-ui-dist/jquery-ui.min');
+    require('./jquery.touch');
+
     require('bootstrap');
 } catch (e) {}
 
@@ -34,6 +37,13 @@ let token = document.head.querySelector('meta[name="csrf-token"]');
 
 if (token) {
     window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+
+    window.$.ajaxSetup({
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': token.content,
+        }
+    });
 } else {
     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
@@ -54,3 +64,8 @@ if (token) {
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     encrypted: true
 // });
+
+try {
+    require('./summarise');
+    require('select2/dist/js/select2.full.js');
+} catch(e) {}

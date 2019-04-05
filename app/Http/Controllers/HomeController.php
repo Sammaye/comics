@@ -27,7 +27,8 @@ class HomeController extends Controller
         if (!$request->user()) {
             return view('index');
         }
-        return view('home');
+        return redirect()
+            ->route('comic.view');
     }
 
     public function help(Request $request)
