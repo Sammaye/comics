@@ -20,7 +20,7 @@
                        class="form-control input-lg text-center{{ $model->type === \App\Comic::TYPE_DATE ? ' datepicker' : '' }}"
                        name="index"
                        id="datepicker"
-                       value="{{ ($index = request('index', 'd-m-Y'))
+                       value="{{ ($index = request('index'))
                         ? ($index instanceof \Carbon\Carbon ? $index->format('d-m-Y') : $index)
                         : '####' }}"
                 />
