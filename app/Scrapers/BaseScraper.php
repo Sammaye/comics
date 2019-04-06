@@ -3,6 +3,7 @@
 namespace App\Scrapers;
 
 use App\Comic;
+use Exception;
 use MongoDB\BSON\Binary;
 
 Class BaseScraper
@@ -151,8 +152,8 @@ Class BaseScraper
                 }
             }
 
-            throw new \Exception;
-        } catch (\Exception $e) {
+            throw new Exception;
+        } catch (Exception $e) {
             // the file probably had a problem beyond our control
             // As such define this as a skip strip since I cannot store it
             $model->skip = 1;

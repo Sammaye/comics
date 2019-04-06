@@ -5,6 +5,9 @@ namespace App;
 use App\Scrapers\BaseScraper;
 use App\Traits\FuzzyDates;
 use Carbon\Carbon;
+use DateTime;
+use DOMDocument;
+use DOMXPath;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
@@ -308,7 +311,10 @@ class Comic extends Model
             $this->base_url ?: $this->homepage,
             PHP_URL_HOST
         );
-        $index = $this->index($index)->format($this->index_format);
+
+        $index = $this->type === self::TYPE_DATE
+            ? $this->index($index)->format($this->index_format)
+            : $this->index($index);
 
         preg_match_all('#\{\$.[^\}]*\}#', $url, $matches);
 
@@ -319,7 +325,7 @@ class Comic extends Model
             if ($operator === '$value' || $operator === '$index'){
                 $value = $index;
             } elseif ($operator === '$date') {
-                $value = (new \DateTime)->format($params[0]);
+                $value = (new DateTime)->format($params[0]);
             }
 
             $url = str_replace($match, $value, $url);
@@ -747,11 +753,11 @@ class Comic extends Model
 
         $url = $url->__toString();
 
-        $doc = new \DOMDocument();
+        $doc = new DOMDocument();
         libxml_use_internal_errors(true);
         $doc->loadHtml($res->getBody());
         libxml_clear_errors();
-        $el = new \DOMXPath($doc);
+        $el = new DOMXPath($doc);
         return $el;
     }
 

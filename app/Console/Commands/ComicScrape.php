@@ -40,13 +40,13 @@ class ComicScrape extends Command
      *
      * @return mixed
      */
-    public function handle($id, $force)
+    public function handle($id = null, $force = null)
     {
         $query = Comic::query();
 
         if ($id) {
-            $query->where('_id', $id)
-                ->orWhere('title', $id);
+            $query->where('_id', $this->argument('id'))
+                ->orWhere('title', $this->argument('id'));
 
             if ($query->count() <= 0) {
                 throw (new ModelNotFoundException)->setModel(new Comic, $id);
@@ -56,7 +56,7 @@ class ComicScrape extends Command
         $comics = $query->get();
 
         foreach($comics as $comic) {
-            $comic->scrapeCron($force);
+            $comic->scrapeCron($this->argument('force'));
         }
 
         return 0;

@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use App\Console\Commands\ComicEmail;
+use App\Console\Commands\ComicScrape;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -24,8 +26,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->command(ComicScrape::class)
+            ->cron('0 7 * * *');
+
+        $schedule->command(ComicEmail::class)
+            ->cron('0 9 * * *');
     }
 
     /**

@@ -44,12 +44,15 @@ class ComicEmail extends Command
      * @return mixed
      * @throws \Exception
      */
-    public function handle($frequency)
+    public function handle()
     {
-        $timeToday = new Carbon('today');
-        $query = User::query();
+        $frequency = $this->argument('frequency');
 
-        $query->where('last_feed_sent', '<', $timeToday)
+        $timeToday = new Carbon('today');
+
+        $query = User::query()
+            ->orderBy('_id', 'ASC')
+            ->where('last_feed_sent', '<', $timeToday)
             ->orWhereNull('last_feed_sent');
 
         if ($frequency) {
@@ -60,7 +63,7 @@ class ComicEmail extends Command
             }
         }
 
-        foreach ($query->orderBy('_id', 'ASC') as $user) {
+        foreach ($query->get() as $user) {
             if (
                 $user->last_feed_sent instanceof Carbon &&
                 $user->last_feed_sent->getTimestamp() === $timeToday->getTimestamp()
@@ -89,7 +92,8 @@ class ComicEmail extends Command
                         ->where('live', 1)
                         ->first()
                 ) {
-                    $comicStrips = ComicStrip::query();
+                    $comicStrips = ComicStrip::query()
+                        ->orderBy('date', 'DESC');
 
                     $comicStrips->where('comic_id', $comic->_id);
 
@@ -99,7 +103,7 @@ class ComicEmail extends Command
                         $comicStrips->where('index', $comic->current_index);
                     }
 
-                    foreach ($comicStrips->orderBy('date', 'DESC') as $strip) {
+                    foreach ($comicStrips->get() as $strip) {
                         $strip->comic = $comic;
                         $strips[] = $strip;
                     }
@@ -116,6 +120,6 @@ class ComicEmail extends Command
 
             Mail::to($user->email)->send(new ComicStrips($strips, $logEntries));
         }
-        return ExitCode::OK;
+        return 0;
     }
 }

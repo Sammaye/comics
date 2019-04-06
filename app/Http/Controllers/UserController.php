@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use MongoDB\BSON\ObjectId;
 use sammaye\Flash\Support\Flash;
+use Throwable;
 
 class UserController extends Controller
 {
@@ -50,7 +51,7 @@ class UserController extends Controller
                             foreach($value as $item) {
                                 try {
                                     $item = new ObjectId($item);
-                                } catch(\Throwable $e) {
+                                } catch(Throwable $e) {
                                     $fail(__('Invalid value provided for subscriptions'));
                                 }
                             }

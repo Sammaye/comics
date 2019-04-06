@@ -2,6 +2,7 @@
 
 namespace App\Scrapers;
 
+use Exception;
 use MongoDB\BSON\Binary;
 
 class AnneAndPythagorasScraper extends BaseScraper
@@ -106,8 +107,8 @@ class AnneAndPythagorasScraper extends BaseScraper
                 return true;
             }
 
-            throw new \Exception;
-        } catch (\Exception $e) {
+            throw new Exception;
+        } catch (Exception $e) {
             // the file probably had a problem beyond our control
             // As such define this as a skip strip since I cannot store it
             $model->skip = 1;

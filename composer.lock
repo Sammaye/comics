@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eb5e38318e516c5152bff7da811e0980",
+    "content-hash": "ee5466caff43d1ee2ee2eec961e5668b",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -155,6 +155,68 @@
                 "webprofiler"
             ],
             "time": "2019-02-26T18:01:54+00:00"
+        },
+        {
+            "name": "danielme85/laravel-log-to-db",
+            "version": "v1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/danielme85/laravel-log-to-db.git",
+                "reference": "652e52cc962c028739a8ef63c63c0714f415f3e0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/danielme85/laravel-log-to-db/zipball/652e52cc962c028739a8ef63c63c0714f415f3e0",
+                "reference": "652e52cc962c028739a8ef63c63c0714f415f3e0",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "~5.6",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "jenssegers/mongodb": "~3.4",
+                "mockery/mockery": "^1.0",
+                "orchestra/testbench": "~3.7"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "danielme85\\LaravelLogToDB\\ServiceProvider"
+                    ],
+                    "aliases": {
+                        "LogToDB": "danielme85\\LaravelLogToDB\\LogToDB"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "danielme85\\LaravelLogToDB\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel Mellum",
+                    "email": "mellum@gmail.com"
+                }
+            ],
+            "description": "Custom Larvel 5.6+ Log channel handler that can store log events to SQL or MongoDB databases. Uses Laravel native logging functionality.",
+            "keywords": [
+                "database",
+                "db",
+                "laravel",
+                "log",
+                "logging",
+                "mongodb",
+                "mysql",
+                "sql"
+            ],
+            "time": "2019-03-08T04:42:12+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",

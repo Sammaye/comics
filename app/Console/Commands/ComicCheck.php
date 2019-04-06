@@ -39,9 +39,9 @@ class ComicCheck extends Command
      *
      * @return mixed
      */
-    public function handle($id)
+    public function handle()
     {
-        $comic = Comic::query()->where('_id', $id)->findOrFail();
+        $comic = Comic::query()->where('_id', $this->argument('id'))->findOrFail();
 
         $strip = $comic->current();
         $index = $comic->next(

@@ -61,7 +61,13 @@
                             <li class="nav-item{{ Route::currentRouteName() === 'comic.view' ? ' active' : '' }}">
                                 <a class="nav-link" href="{{ route('comic.view') }}">{{ __('View Archive') }}</a>
                             </li>
-                            <li class="nav-item dropdown">
+                            <li
+                                class="nav-item dropdown{{ in_preg_array(Route::currentRouteName(), [
+                                    '/^user\.edit$/',
+                                    '/^admin\.user/',
+                                    '/^admin\.comic/',
+                                ]) ? ' active' : '' }}"
+                            >
                                 <a id="navbarDropdown"
                                    class="nav-link dropdown-toggle"
                                    href="#"
@@ -81,14 +87,14 @@
                                         {{ __('Settings') }}
                                     </a>
                                     @can('admin-user')
-                                        <a class="dropdown-item{{ Route::currentRouteName() === 'admin.user.index' ? ' active' : '' }}"
+                                        <a class="dropdown-item{{ preg_match('/^admin\.user/', Route::currentRouteName()) ? ' active' : '' }}"
                                            href="{{ route('admin.user.index') }}"
                                         >
                                             {{ __('Admin Users') }}
                                         </a>
                                     @endcan
                                     @can('admin-comic')
-                                        <a class="dropdown-item{{ Route::currentRouteName() === 'admin.comic.index' ? ' active' : '' }}"
+                                        <a class="dropdown-item{{ preg_match('/^admin\.comic/', Route::currentRouteName()) ? ' active' : '' }}"
                                            href="{{ route('admin.comic.index') }}"
                                         >
                                             {{ __('Admin Comics') }}
