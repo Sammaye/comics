@@ -1,7 +1,7 @@
 <?php
 
 use Monolog\Handler\StreamHandler;
-use Monolog\Handler\SyslogUdpHandler;
+use sammaye\MonologSwiftMailerHandler\Handler;
 
 return [
 
@@ -36,7 +36,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['daily'],
+            'channels' => ['daily', 'email'],
             'ignore_exceptions' => false,
         ],
 
@@ -51,24 +51,6 @@ return [
             'path' => storage_path('logs/laravel.log'),
             'level' => 'debug',
             'days' => 14,
-        ],
-
-        'slack' => [
-            'driver' => 'slack',
-            'url' => env('LOG_SLACK_WEBHOOK_URL'),
-            'username' => 'Laravel Log',
-            'emoji' => ':boom:',
-            'level' => 'critical',
-        ],
-
-        'papertrail' => [
-            'driver' => 'monolog',
-            'level' => 'debug',
-            'handler' => SyslogUdpHandler::class,
-            'handler_with' => [
-                'host' => env('PAPERTRAIL_URL'),
-                'port' => env('PAPERTRAIL_PORT'),
-            ],
         ],
 
         'stderr' => [
@@ -88,6 +70,16 @@ return [
         'errorlog' => [
             'driver' => 'errorlog',
             'level' => 'debug',
+        ],
+
+        'email' => [
+            'driver' => 'custom',
+            'via' => Handler::class,
+            'from' => [
+                'address' => env('MAIL_LOG_FROM_ADDRESS', 'hello@example.com'),
+                'name' => env('MAIL_LOG_FROM_NAME', 'Example'),
+            ],
+            'to' => env('MAIL_LOG_EMAIL_ADDRESS', 'hello@example.com'),
         ],
 
         'scraper' => [

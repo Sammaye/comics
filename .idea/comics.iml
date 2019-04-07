@@ -66,6 +66,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/sammaye/laravel-flash" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sammaye/laravel-gridview" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sammaye/laravel-permission" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/sammaye/monolog-laravel-swiftmailer-handler" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/code-unit-reverse-lookup" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/comparator" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/diff" />

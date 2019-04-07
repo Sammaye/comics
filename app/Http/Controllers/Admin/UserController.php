@@ -80,14 +80,14 @@ class UserController extends Controller
                 'string',
                 'regex:/^[0-9A-Za-z_]+$/',
                 'max:255',
-                'unique:users',
+                'unique:user',
             ],
             'email' => [
                 'required',
                 'string',
                 'email',
                 'max:255',
-                'unique:users',
+                'unique:user',
             ],
             'password' => ['required', 'string', 'min:6'],
         ]);

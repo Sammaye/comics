@@ -33,6 +33,18 @@ const app = new Vue({
 });
 */
 
+$(window).on('resize scroll', function(e){
+    var docH = parseInt($(document).height()),
+        viewPortH = parseInt($(window).height());
+
+    if (docH > viewPortH) {
+        $('.container-index').removeClass('full-height');
+    } else {
+        $('.container-index').addClass('full-height');
+    }
+});
+$(window).trigger('resize');
+
 $(document).on('keypress', '.gridview thead input',  function(e){
     if (e.which == 13) {
         window.location = $(this).parents('tr').attr('data-action') + '?' + $(this).parents('tr').find('input').serialize();

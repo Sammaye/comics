@@ -27,7 +27,8 @@
         "laravel/tinker": "^1.0",
         "sammaye/laravel-flash": "dev-master",
         "sammaye/laravel-gridview": "dev-master",
-        "sammaye/laravel-permission": "dev-master"
+        "sammaye/laravel-permission": "dev-master",
+        "sammaye/monolog-laravel-swiftmailer-handler": "@dev"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

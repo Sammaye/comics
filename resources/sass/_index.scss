@@ -2,18 +2,24 @@
   background: url('../images/garfield-ribbon.jpg') #e74a39;
   background-repeat: no-repeat;
   background-position: center 100%;
-  padding: rem(20) 0;
+  display: flex;
+  flex-flow: column;
+  flex-grow: 1;
 
-  .message-welcome {
-    h1 {
-      color: #fff;
-      font-weight: normal;
-    }
+  &.full-height {
+    height: 100vh;
+  }
+
+  .title {
+    font-weight: 300;
+    line-height: 1.5;
   }
 
   .form-register {
     label {
       color: #fff;
+      font-size: 1.25rem;
+      line-height: 1.5;
     }
 
     .was-validated .form-control:invalid,
@@ -23,10 +29,6 @@
 
     .invalid-feedback {
       color: $white;
-    }
-
-    .btn-outline-light:hover {
-      color: #e74a39;
     }
 
     .sso-login-methods {

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ee5466caff43d1ee2ee2eec961e5668b",
+    "content-hash": "521c7a87fc50c864c93b57341556aa17",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -2458,6 +2458,46 @@
                 "laravel"
             ],
             "time": "2019-03-29T00:31:28+00:00"
+        },
+        {
+            "name": "sammaye/monolog-laravel-swiftmailer-handler",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Sammaye/monolog-laravel-swiftmailer-handler.git",
+                "reference": "652f474083b9a74ca880fbe17edc734850e5730a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Sammaye/monolog-laravel-swiftmailer-handler/zipball/652f474083b9a74ca880fbe17edc734850e5730a",
+                "reference": "652f474083b9a74ca880fbe17edc734850e5730a",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "~5.0",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "sammaye\\MonologSwiftMailerHandler": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sammaye",
+                    "homepage": "https://sammaye.com"
+                }
+            ],
+            "description": "A Swiftmailer handler for Monolog for use with Laravel",
+            "keywords": [
+                "laravel"
+            ],
+            "time": "2019-04-07T20:11:04+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -5463,7 +5503,8 @@
     "stability-flags": {
         "sammaye/laravel-flash": 20,
         "sammaye/laravel-gridview": 20,
-        "sammaye/laravel-permission": 20
+        "sammaye/laravel-permission": 20,
+        "sammaye/monolog-laravel-swiftmailer-handler": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

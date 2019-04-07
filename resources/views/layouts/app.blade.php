@@ -122,31 +122,31 @@
                 </div>
             </div>
         </nav>
-        @if (session('resent'))
-            <div class="alert alert-warning mb-0 alert-sticky-flash" role="alert">
-                <div class="container">
-                    {{ __('A fresh verification link has been sent to your E-Mail address.') }}
+        <div class="body-fixed-top @yield('container')">
+            @if (session('resent'))
+                <div class="alert alert-warning mb-0 alert-sticky-flash" role="alert">
+                    <div class="container">
+                        {{ __('A fresh verification link has been sent to your E-Mail address.') }}
+                    </div>
                 </div>
-            </div>
-        @elseif(session('verified'))
-            <div class="alert alert-success mb-0 alert-sticky-flash" role="alert">
-                <div class="container">
-                    {{ __('Your E-Mail address is now verified, thank you!') }}
+            @elseif(session('verified'))
+                <div class="alert alert-success mb-0 alert-sticky-flash" role="alert">
+                    <div class="container">
+                        {{ __('Your E-Mail address is now verified, thank you!') }}
+                    </div>
                 </div>
-            </div>
-        @elseif(Auth::user() && !Auth::user()->hasVerifiedEmail())
-            <div class="alert alert-danger mb-0 alert-sticky-flash" role="alert">
-                <div  class="container">
-                    {!! __(
-                        'You must verify your E-Mail address before receiving E-Mails, <a href=":url">please click here to verify</a>',
-                        ['url' => route('verification.resend')]
-                    ) !!}
+            @elseif(Auth::user() && !Auth::user()->hasVerifiedEmail())
+                <div class="alert alert-danger mb-0 alert-sticky-flash" role="alert">
+                    <div  class="container">
+                        {!! __(
+                            'You must verify your E-Mail address before receiving E-Mails, <a href=":url">please click here to verify</a>',
+                            ['url' => route('verification.resend')]
+                        ) !!}
+                    </div>
                 </div>
-            </div>
-        @endif
-        <div class="body-fixed-top">
+            @endif
             @include('flash::flash', ['class' => 'mb-0 alert-sticky-flash'])
-            <main class="@yield('container')">
+            <main class="">
                 @yield('content')
             </main>
         </div>

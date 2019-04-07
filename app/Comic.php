@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use DateTime;
 use DOMDocument;
 use DOMXPath;
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
@@ -771,7 +772,7 @@ class Comic extends Model
             Log::channel('scraper')
                 ->error(
                     "comic\\$this->id: " . $message,
-                    [(new \Exception($message))->getTraceAsString()]
+                    [(new Exception($message))->getTraceAsString()]
                 );
         }
         return false;
@@ -784,7 +785,7 @@ class Comic extends Model
             Log::channel('scraper')
                 ->warning(
                     "comic\\$this->id: " . $message,
-                    [(new \Exception($message))->getTraceAsString()]
+                    [(new Exception($message))->getTraceAsString()]
                 );
         }
         return false;

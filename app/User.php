@@ -74,9 +74,11 @@ class User extends Authenticatable{
 
     public function setComicsAttribute($value)
     {
-        foreach($value as $k => $comic) {
+        $value = is_array($value) ? $value : [];
+        foreach ($value as $k => $comic) {
             if ($comic['date'] instanceof Carbon) {
-                $value[$k]['date'] = new UTCDateTime($comic['date']->getTimestamp()*1000);
+                $value[$k]['date'] =
+                    new UTCDateTime($comic['date']->getTimestamp() * 1000);
             }
         }
         $this->attributes['comics'] = $value;
@@ -84,9 +86,11 @@ class User extends Authenticatable{
 
     public function getComicsAttribute($value)
     {
-        foreach($value as $k => $comic) {
+        $value = is_array($value) ? $value : [];
+        foreach ($value as $k => $comic) {
             if ($comic['date'] instanceof UTCDateTime) {
-                $value[$k]['date'] = new Carbon($comic['date']->toDateTime()->getTimestamp());
+                $value[$k]['date'] = new Carbon($comic['date']->toDateTime()
+                    ->getTimestamp());
             }
         }
         return $value;
