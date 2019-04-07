@@ -84,7 +84,7 @@ class ComicEmail extends Command
                 $timeAgo = $timeToday->modify('-1 month');
             }
 
-            if (!is_array($user->comics)) {
+            if (!is_array($user->comics) || !$user->hasVerifiedEmail()) {
                 return false;
             }
 
