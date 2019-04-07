@@ -770,7 +770,7 @@ class Comic extends Model
 
             Log::channel('scraper')
                 ->error(
-                    "comic\\$this->id:" . $message,
+                    "comic\\$this->id: " . $message,
                     [(new \Exception($message))->getTraceAsString()]
                 );
         }
@@ -783,7 +783,7 @@ class Comic extends Model
             $message = __($message, $params);
             Log::channel('scraper')
                 ->warning(
-                    "comic\\$this->id:" . $message,
+                    "comic\\$this->id: " . $message,
                     [(new \Exception($message))->getTraceAsString()]
                 );
         }

@@ -57,7 +57,7 @@
                         \sammaye\Grid\Column::make('trace')
                             ->setFilterCell(false)
                             ->setDataContent(function($column, $row){
-                                return nl2br($row->context[0]);
+                                return '<small>' . nl2br($row->context[0]) . '</small>';
                             }),
                           \sammaye\Grid\Column::make('created_at')
                             ->setFilterCell(false),
