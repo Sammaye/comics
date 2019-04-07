@@ -52,7 +52,7 @@ class ComicController extends Controller
         $logs = LogToDB::model(
             null,
             'mongodb',
-            'log'
+            config('logging.channels.scraper.collection')
         )->newModelQuery();
 
         foreach (array_filter($request->input()) as $k => $v) {

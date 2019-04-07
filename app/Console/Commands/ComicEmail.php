@@ -125,7 +125,7 @@ class ComicEmail extends Command
                 $logEntries = LogToDB::model(
                     null,
                     'mongodb',
-                    'log'
+                    config('logging.channels.scraper.collection')
                 )
                     ->newModelQuery()
                     ->where('created_at', '>', new Carbon('today'))
