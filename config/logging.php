@@ -96,7 +96,7 @@ return [
             'level' => env('APP_LOG_LEVEL', 'debug'),
             'name' => 'Scraper Log',
             'connection' => 'mongodb',
-            'collection' => 'log',
+            'collection' => 'laravel_log',
             'detailed' => true,
             'queue' => false,
             'queue_name' => '',
