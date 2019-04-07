@@ -20277,6 +20277,18 @@ hr {
   visibility: hidden;
 }
 
+.table .sort.asc:after {
+  font-family: "Font Awesome 5 Free";
+  content: "\F15D";
+  margin-left: 0.3125rem;
+}
+
+.table .sort.desc:after {
+  font-family: "Font Awesome 5 Free";
+  content: "\F15E";
+  margin-left: 0.3125rem;
+}
+
 .sso-login-methods {
   text-align: center;
   margin-top: 1.875rem;

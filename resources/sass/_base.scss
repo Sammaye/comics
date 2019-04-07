@@ -23,6 +23,22 @@ hr {
   visibility: hidden;
 }
 
+.table {
+  .sort {
+    &.asc:after {
+      font-family: "Font Awesome 5 Free";
+      content: "\f15d";
+      margin-left: rem(5);
+    }
+
+    &.desc:after {
+      font-family: "Font Awesome 5 Free";
+      content: "\f15e";
+      margin-left: rem(5);
+    }
+  }
+}
+
 .sso-login-methods {
   text-align: center;
   margin-top: rem(30);

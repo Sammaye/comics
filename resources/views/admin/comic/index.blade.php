@@ -56,6 +56,7 @@
                         \sammaye\Grid\Column::make('message'),
                         \sammaye\Grid\Column::make('trace')
                             ->setFilterCell(false)
+                            ->setSortable(false)
                             ->setDataContent(function($column, $row){
                                 return '<small>' . nl2br($row->context[0]) . '</small>';
                             }),
