@@ -20252,6 +20252,10 @@ readers do not read off random characters that represent icons */
   font-weight: 900;
 }
 
+hr {
+  border-top: 0.0625rem solid #f1f3f5;
+}
+
 #app {
   min-height: 100%;
   height: 100vh;
@@ -20441,9 +20445,5 @@ readers do not read off random characters that represent icons */
 .container-user-edit .list-group-item .btn-unsubscribe {
   right: 0.5rem;
   top: 0.5rem;
-}
-
-.container-admin-comic-create hr {
-  border-top: 0.0625rem solid #f1f3f5;
 }
 

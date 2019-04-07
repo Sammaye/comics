@@ -89,6 +89,19 @@ return [
             'driver' => 'errorlog',
             'level' => 'debug',
         ],
+
+        'scraper' => [
+            'driver' => 'custom',
+            'via' => danielme85\LaravelLogToDB\LogToDbHandler::class,
+            'level' => env('APP_LOG_LEVEL', 'debug'),
+            'name' => 'Scraper Log',
+            'connection' => 'mongodb',
+            'collection' => 'log',
+            'detailed' => true,
+            'queue' => false,
+            'queue_name' => '',
+            'queue_connection' => ''
+        ]
     ],
 
 ];

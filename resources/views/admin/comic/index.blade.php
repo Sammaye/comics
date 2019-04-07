@@ -4,7 +4,7 @@
 @section('content')
 <div class="container-fluid">
     <div class="row">
-        <div class="col">
+        <div class="col mb-5">
             <div class="py-4">
                 <a href="{{ route('admin.comic.create') }}" class="btn btn-outline-primary btn-lg">Create Comic</a>
             </div>
@@ -37,6 +37,30 @@
                             ->setDeleteButton(function($column, $row){
                                 return route('admin.comic.destroy', ['comic' => $row]);
                             }, __('Delete'))
+                    ])
+                ->getTable()
+            !!}
+
+            <hr>
+            <h2 class="h4 mb-3">Logs</h2>
+
+            {!!
+                \sammaye\Grid\Grid::make('log')
+                    ->setData($logs)
+                    ->setAttributes(['class' => 'table table-bordered table-striped gridview'])
+                    ->setColumns([
+                        \sammaye\Grid\Column::make('id')
+                            ->setDataCellTag('th')
+                            ->setLabel(__('#'))
+                            ->setAttributes(['scope' => 'row']),
+                        \sammaye\Grid\Column::make('message'),
+                        \sammaye\Grid\Column::make('trace')
+                            ->setFilterCell(false)
+                            ->setDataContent(function($column, $row){
+                                return nl2br($row->context[0]);
+                            }),
+                          \sammaye\Grid\Column::make('created_at')
+                            ->setFilterCell(false),
                     ])
                 ->getTable()
             !!}

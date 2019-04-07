@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Comic;
 use App\ComicStrip;
+use danielme85\LaravelLogToDB\LogToDB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Schema;
@@ -22,6 +23,10 @@ class ComicController extends Controller
         $comics = Comic::query();
 
         foreach (array_filter($request->input()) as $k => $v) {
+            if (!preg_match('/^comic-/', $k)) {
+                continue;
+            }
+
             $column_name = str_replace('comic-', '', $k);
             if ($k === 'comic-sort') {
                 $comics->orderBy(
@@ -44,9 +49,40 @@ class ComicController extends Controller
             }
         }
 
+        $logs = LogToDB::model(
+            null,
+            'mongodb',
+            'log'
+        )->newModelQuery();
+
+        foreach (array_filter($request->input()) as $k => $v) {
+            if (!preg_match('/^log-/', $k)) {
+                continue;
+            }
+
+            $column_name = str_replace('log-', '', $k);
+            if ($k === 'log-sort') {
+                $logs->orderBy(
+                    trim($v, '-'),
+                    strpos($v, '-') === 0 ? 'DESC' : 'ASC'
+                );
+            } elseif ($k !== 'log-page') {
+                if ($column_name === 'id') {
+                    $logs->where('_id', '=', new ObjectId($v));
+                } else {
+                    $logs->where(
+                        $column_name,
+                        'regexp',
+                        '/' . $v . '/i'
+                    );
+                }
+            }
+        }
+
         return view('admin.comic.index')
             ->with([
                 'comics' => $comics,
+                'logs' => $logs,
             ]);
     }
 

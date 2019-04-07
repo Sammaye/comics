@@ -7,11 +7,13 @@ use App\ComicStrip;
 use App\Mail\ComicStrips;
 use App\User;
 use Carbon\Carbon;
+use danielme85\LaravelLogToDB\LogToDB;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 
 class ComicEmail extends Command
 {
+
     /**
      * The name and signature of the console command.
      *
@@ -65,8 +67,9 @@ class ComicEmail extends Command
 
         foreach ($query->get() as $user) {
             if (
-                $user->last_feed_sent instanceof Carbon &&
-                $user->last_feed_sent->getTimestamp() === $timeToday->getTimestamp()
+                $user->last_feed_sent instanceof Carbon
+                && $user->last_feed_sent->getTimestamp()
+                === $timeToday->getTimestamp()
             ) {
                 continue;
             }
@@ -110,12 +113,23 @@ class ComicEmail extends Command
                 }
             }
 
+            if (count($strips) <= 0) {
+                // No strips for this user by their settings
+                continue;
+            }
+
             $user->save();
 
             $logEntries = [];
             if ($user->can('root')) {
-                // TODO log
-                $logEntries = [];
+                $logEntries = LogToDB::model(
+                    null,
+                    'mongodb',
+                    'log'
+                )
+                    ->newModelQuery()
+                    ->where('created_at', '>', new Carbon('today'))
+                    ->get();
             }
 
             Mail::to($user->email)->send(new ComicStrips($strips, $logEntries));

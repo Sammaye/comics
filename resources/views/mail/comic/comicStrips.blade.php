@@ -42,6 +42,8 @@ $lastComicTitle = null;
     <br/>
     <br/>
     @foreach ($logEntries as $logEntry)
-        {{ nl2br(str_replace(' ', '&nbsp;', $logEntry->message)) }} <br/>
+        {{ $logEntry->message }}<br/>
+        {!! nl2br($logEntry->context[0]) !!}<br/>
+        <br/>
     @endforeach
 @endif

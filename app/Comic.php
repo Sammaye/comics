@@ -12,6 +12,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\TransferStats;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -766,7 +767,12 @@ class Comic extends Model
         if (!$ignore) {
             $message = __($message, $params);
             $this->scrapeErrors[] = $message;
-            //Yii::warning($message, 'comic\\' . (String)$this->_id);
+
+            Log::channel('scraper')
+                ->error(
+                    "comic\\$this->id:" . $message,
+                    [(new \Exception($message))->getTraceAsString()]
+                );
         }
         return false;
     }
@@ -775,7 +781,11 @@ class Comic extends Model
     {
         if (!$ignore) {
             $message = __($message, $params);
-            //Yii::warning($message, 'comic\\' . (String)$this->_id);
+            Log::channel('scraper')
+                ->warning(
+                    "comic\\$this->id:" . $message,
+                    [(new \Exception($message))->getTraceAsString()]
+                );
         }
         return false;
     }

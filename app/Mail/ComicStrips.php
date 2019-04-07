@@ -35,7 +35,7 @@ class ComicStrips extends Mailable
     {
         return $this
             ->subject(__(
-                'Your Sammaye\'s Comics Feed for :date',
+                'Your Comic Strips for :date',
                 ['date' => date('d-m-Y')]
             ))
             ->view('mail.comic.comicStrips')
