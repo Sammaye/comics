@@ -28,7 +28,7 @@
                    class="form-control{{ $errors->has('date') ? ' is-invalid' : '' }}"
                    name="date"
                    value="{{ old('date', $model->date) instanceof \Carbon\Carbon
-                    ? old('date', $model->date)->format('d/m/Y')
+                    ? old('date', $model->date)->format(config('app.inputDateFormat'))
                     : old('date', $model->date) }}"
             >
             <span class="invalid-feedback" role="alert">
@@ -42,7 +42,7 @@
                    class="form-control{{ $errors->has('index') ? ' is-invalid' : '' }}"
                    name="index"
                    value="{{ old('index', $model->index) instanceof \Carbon\Carbon
-                    ? old('index', $model->index)->format('d/m/Y')
+                    ? old('index', $model->index)->format(config('app.inputDateFormat'))
                     : old('index', $model->index) }}"
                    required
             >
@@ -75,7 +75,7 @@
                    class="form-control{{ $errors->has('previous') ? ' is-invalid' : '' }}"
                    name="previous"
                    value="{{ old('previous', $model->previous) instanceof \Carbon\Carbon
-                    ? old('previous', $model->previous)->format('d/m/Y')
+                    ? old('previous', $model->previous)->format(config('app.inputDateFormat'))
                     : old('previous', $model->previous) }}"
             >
             <span class="invalid-feedback" role="alert">
@@ -89,7 +89,7 @@
                    class="form-control{{ $errors->has('next') ? ' is-invalid' : '' }}"
                    name="next"
                    value="{{ old('next', $model->next) instanceof \Carbon\Carbon
-                    ? old('next', $model->next)->format('d/m/Y')
+                    ? old('next', $model->next)->format(config('app.inputDateFormat'))
                     : old('next', $model->next) }}"
             >
             <span class="invalid-feedback" role="alert">

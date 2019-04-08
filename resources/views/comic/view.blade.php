@@ -4,7 +4,7 @@
     [
         'title' => $model->title,
         'index' => $comicStrip->index instanceof \Carbon\Carbon
-            ? $comicStrip->index->format('d-m-Y')
+            ? $comicStrip->index->format(config('app.inputDateFormat'))
             : $comicStrip->index
     ]
 ))
@@ -73,10 +73,10 @@
                id="comic-strip-index"
                data-latestindex="{{
                 $model->getLatestIndexValue() instanceof \Carbon\Carbon
-                    ? $model->getLatestIndexValue()->format('d-m-Y')
+                    ? $model->getLatestIndexValue()->format(config('app.inputDateFormat'))
                     : $model->getLatestIndexValue()
                }}"
-               value="{{ $comicStrip->index instanceof \Carbon\Carbon ? $comicStrip->index->format('d-m-Y') : $comicStrip->index }}"
+               value="{{ $comicStrip->index instanceof \Carbon\Carbon ? $comicStrip->index->format(config('app.inputDateFormat')) : $comicStrip->index }}"
         />
         <div class="input-group-append">
             @if($nextStrip)

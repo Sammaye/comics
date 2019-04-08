@@ -219,7 +219,7 @@
                    class="form-control{{ $errors->has('current_index') ? ' is-invalid' : '' }}"
                    name="current_index"
                    value="{{ old('current_index', $model->current_index) instanceof \Carbon\Carbon
-                    ? old('current_index', $model->current_index)->format('d/m/Y')
+                    ? old('current_index', $model->current_index)->format(config('app.inputDateFormat'))
                     : old('current_index', $model->current_index) }}"
                    required
             >
@@ -336,7 +336,7 @@
                    class="form-control{{ $errors->has('first_index') ? ' is-invalid' : '' }}"
                    name="first_index"
                    value="{{ old('first_index', $model->first_index) instanceof \Carbon\Carbon
-                    ? old('first_index', $model->first_index)->format('d/m/Y')
+                    ? old('first_index', $model->first_index)->format(config('app.inputDateFormat'))
                     : old('first_index', $model->first_index) }}"
             >
             <span class="invalid-feedback" role="alert">
@@ -350,7 +350,7 @@
                    class="form-control{{ $errors->has('last_index') ? ' is-invalid' : '' }}"
                    name="last_index"
                    value="{{ old('last_index', $model->last_index) instanceof \Carbon\Carbon
-                    ? old('last_index', $model->last_index)->format('d/m/Y')
+                    ? old('last_index', $model->last_index)->format(config('app.inputDateFormat'))
                     : old('last_index', $model->last_index) }}"
             >
             <span class="invalid-feedback" role="alert">

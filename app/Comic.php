@@ -114,6 +114,8 @@ class Comic extends Model
 
     public function getValidator($request)
     {
+        $dateFormat = config('app.inputDateFormat');
+
         foreach(['type', 'classic_edition', 'active', 'live'] as $k => $v) {
             $request->merge([$v => (int)$request->input($v)]);
         }
@@ -221,19 +223,19 @@ class Comic extends Model
 
         if ($request->input('type') === self::TYPE_DATE) {
             $rules['current_index'] = [
-                'date_format:d/m/Y',
+                "date_format:$dateFormat",
                 $request->input('active') === 0 ? 'before_or_equal:last_index' : '',
-                function($attribute, $value, $fail) use($request) {
-                    $request->merge([$attribute => Carbon::createFromFormat('!d/m/Y', $value)]);
+                function($attribute, $value, $fail) use($request, $dateFormat) {
+                    $request->merge([$attribute => Carbon::createFromFormat("!$dateFormat", $value)]);
                 }
             ];
 
             $rules['first_index'] = $rules['last_index'] = [
                 'nullable',
                 'required_if:active,0',
-                'date_format:d/m/Y',
-                function($attribute, $value, $fail) use($request) {
-                    $request->merge([$attribute => Carbon::createFromFormat('!d/m/Y', $value)]);
+                "date_format:$dateFormat",
+                function($attribute, $value, $fail) use($request, $dateFormat) {
+                    $request->merge([$attribute => Carbon::createFromFormat("!$dateFormat", $value)]);
                 }
             ];
         }
@@ -296,7 +298,7 @@ class Comic extends Model
             [
                 'comic' => $this,
                 'index' => $this->type === self::TYPE_DATE
-                    ? $index->format('d-m-Y')
+                    ? $index->format(config('app.inputDateFormat'))
                     : $index
             ]
         );

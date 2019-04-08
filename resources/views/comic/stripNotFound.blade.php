@@ -21,7 +21,7 @@
                        name="index"
                        id="datepicker"
                        value="{{ ($index = request('index'))
-                        ? ($index instanceof \Carbon\Carbon ? $index->format('d-m-Y') : $index)
+                        ? ($index instanceof \Carbon\Carbon ? $index->format(config('app.inputDateFormat')) : $index)
                         : '####' }}"
                 />
                 <div class="input-group-append">

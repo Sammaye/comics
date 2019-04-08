@@ -37,6 +37,8 @@ class ComicStrip extends Model
 
     public function getValidator($request)
     {
+        $dateFormat = config('app.inputDateFormat');
+
         foreach(['skip'] as $k => $v) {
             $request->merge([$v => (int)$request->input($v)]);
         }
@@ -45,11 +47,11 @@ class ComicStrip extends Model
             'date' => [
                 'nullable',
                 'sometimes',
-                'date_format:d/m/Y',
+                "date_format:$dateFormat",
                 'after:1600-01-01',
                 'before_or_equal:' . Carbon::now()->format('Y-m-d'),
-                function($attribute, $value, $fail) use($request) {
-                    $request->merge([$attribute => Carbon::createFromFormat('!d/m/Y', $value)]);
+                function($attribute, $value, $fail) use($request, $dateFormat) {
+                    $request->merge([$attribute => Carbon::createFromFormat("!$dateFormat", $value)]);
                 }
             ],
             'url' => 'nullable|sometimes|string|max:250',
@@ -71,21 +73,21 @@ class ComicStrip extends Model
         if ($this->comic->type === Comic::TYPE_DATE) {
             $rules['index'] = [
                 'sometimes',
-                'date_format:d/m/Y',
+                "date_format:$dateFormat",
                 Rule::unique($this->getTable())->where(function($query){
                     return $query->where('comic_id', $this->comic_id);
                 })->ignore($this, '_id'),
-                function($attribute, $value, $fail) use($request) {
-                    $request->merge([$attribute => Carbon::createFromFormat('!d/m/Y', $value)]);
+                function($attribute, $value, $fail) use($request, $dateFormat) {
+                    $request->merge([$attribute => Carbon::createFromFormat("!$dateFormat", $value)]);
                 }
             ];
 
             $rules['previous'] = $rules['next'] = [
                 'nullable',
                 'sometimes',
-                'date_format:d/m/Y',
-                function($attribute, $value, $fail) use($request) {
-                    $request->merge([$attribute => Carbon::createFromFormat('!d/m/Y', $value)]);
+                "date_format:$dateFormat",
+                function($attribute, $value, $fail) use($request, $dateFormat) {
+                    $request->merge([$attribute => Carbon::createFromFormat("!$dateFormat", $value)]);
                 }
             ];
         }

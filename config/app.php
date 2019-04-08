@@ -69,6 +69,19 @@ return [
 
     'timezone' => 'UTC',
 
+     /*
+     |-------------------------------------------------------------------------
+     | Application Input Date Format
+     |-------------------------------------------------------------------------
+     |
+     | This is used to specify the format used by all the inputs and forms and
+     | interface. It is global to the entire application. If you change this be
+     | sure to also change the date format for the date picker you are using
+     | in the UI.
+     |
+     */
+    'inputDateFormat' => 'd-m-Y',
+
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration

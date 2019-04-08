@@ -51,7 +51,7 @@ class ComicController extends Controller
         View::share('selectedComicId', (string)$comic->_id);
 
         $current = $comic->findStrip(
-            $comic->index($index ?: $comic->current_index, 'd-m-Y'),
+            $comic->index($index ?: $comic->current_index, config('app.inputDateFormat')),
             [],
             false
         );
