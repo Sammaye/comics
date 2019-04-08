@@ -67,9 +67,8 @@ class ComicEmail extends Command
 
         foreach ($query->get() as $user) {
             if (
-                $user->last_feed_sent instanceof Carbon
-                && $user->last_feed_sent->getTimestamp()
-                === $timeToday->getTimestamp()
+                $user->last_feed_sent instanceof Carbon &&
+                $user->last_feed_sent->getTimestamp() === $timeToday->getTimestamp()
             ) {
                 continue;
             }
