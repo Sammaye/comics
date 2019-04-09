@@ -90,26 +90,28 @@
             @endif
         </div>
     </form>
-    @if ($comicStrip->skip)
-        <div class="strip-not-compatible text-center">
-            <a href="<?= $comicStrip->url ?>" target="_blank" rel="nofollow">
-                {{ __('This strip is not compatible with this site but you can click here to view it on their site') }}
+    <div class="text-center">
+        @if ($comicStrip->skip)
+            <div class="strip-not-compatible text-center">
+                <a href="<?= $comicStrip->url ?>" target="_blank" rel="nofollow">
+                    {{ __('This strip is not compatible with this site but you can click here to view it on their site') }}
+                </a>
+            </div>
+        @elseif (is_array($comicStrip->img))
+            <a href="{{ $model->scrapeUrl($comicStrip->index) }}" rel="nofollow" target="_blank">
+                @foreach ($comicStrip->img as $k => $img)
+                    <img src="{{ route('comic.image', ['comicStrip' => $comicStrip, 'index' => $k]) }}"
+                        class="img-fluid comic-img"
+                    />
+                @endforeach
             </a>
-        </div>
-    @elseif (is_array($comicStrip->img))
-        <a href="{{ $model->scrapeUrl($comicStrip->index) }}" rel="nofollow" target="_blank">
-            @foreach ($comicStrip->img as $k => $img)
-                <img src="{{ route('comic.image', ['comicStrip' => $comicStrip, 'index' => $k]) }}"
-                    class="img-fluid comic-img"
+        @else
+            <a href="{{ $model->scrapeUrl($comicStrip->index) }}" rel="nofollow" target="_blank">
+                <img src="{{ route('comic.image', ['comicStrip' => $comicStrip]) }}"
+                     class="img-fluid comic-img mr-auto ml-auto"
                 />
-            @endforeach
-        </a>
-    @else
-        <a href="{{ $model->scrapeUrl($comicStrip->index) }}" rel="nofollow" target="_blank">
-            <img src="{{ route('comic.image', ['comicStrip' => $comicStrip]) }}"
-                 class="img-fluid comic-img mr-auto ml-auto"
-            />
-        </a>
-    @endif
+            </a>
+        @endif
+    </div>
 </div>
 @endsection
