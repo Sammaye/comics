@@ -3,7 +3,8 @@
 namespace App;
 
 use App\Scrapers\BaseScraper;
-use App\Traits\FuzzyDates;
+use App\Traits\HasFuzzyDates;
+use App\Traits\HasObjectId;
 use Carbon\Carbon;
 use DateTime;
 use DOMDocument;
@@ -23,7 +24,7 @@ use Jenssegers\Mongodb\Eloquent\Model;
 
 class Comic extends Model
 {
-    use FuzzyDates;
+    use HasObjectId, HasFuzzyDates;
 
     const TYPE_DATE = 0;
     const TYPE_ID = 2;

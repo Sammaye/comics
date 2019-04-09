@@ -2,15 +2,17 @@
 
 namespace App;
 
-use App\Traits\FuzzyDates;
+use App\Traits\HasFuzzyDates;
+use App\Traits\HasObjectId;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Jenssegers\Mongodb\Eloquent\Model;
+use MongoDB\BSON\ObjectId;
 
 class ComicStrip extends Model
 {
-    use FuzzyDates;
+    use HasObjectId, HasFuzzyDates;
 
     protected $collection = 'comic_strip';
 
@@ -33,6 +35,11 @@ class ComicStrip extends Model
     public function comic()
     {
         return $this->belongsTo(Comic::class);
+    }
+
+    public function setComicIdAttribute($value)
+    {
+        $this->attributes['comic_id'] = new ObjectId($value);
     }
 
     public function getValidator($request)

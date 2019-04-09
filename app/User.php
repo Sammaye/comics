@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Traits\HasObjectId;
 use Carbon\Carbon;
 use Jenssegers\Mongodb\Auth\User as Authenticatable;
 use Illuminate\Auth\MustVerifyEmail;
@@ -12,7 +13,7 @@ use sammaye\Permission\Traits\HasPermissions;
 
 class User extends Authenticatable{
 
-    use MustVerifyEmail, Notifiable, HasPermissions;
+    use HasObjectId, MustVerifyEmail, Notifiable, HasPermissions;
 
     protected $collection = 'user';
 

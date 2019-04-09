@@ -106,5 +106,6 @@
     <orderEntry type="module" module-name="laravel-gridview" />
     <orderEntry type="module" module-name="laravel-flash" />
     <orderEntry type="module" module-name="laravel-permissions" />
+    <orderEntry type="module" module-name="comics-config" />
   </component>
 </module>

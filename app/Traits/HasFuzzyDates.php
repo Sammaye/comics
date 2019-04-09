@@ -5,7 +5,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use MongoDB\BSON\UTCDateTime;
 
-trait FuzzyDates
+trait HasFuzzyDates
 {
     public function setAttribute($key, $value)
     {

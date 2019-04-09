@@ -11,53 +11,55 @@
 |
 */
 
-Route::get('/', 'HomeController@index')->name('home');
-Route::get('/help', 'HomeController@help')->name('help');
+Route::prefix(config('app.base_url'))->group(function(){
+    Route::get('/', 'HomeController@index')->name('home');
+    Route::get('/help', 'HomeController@help')->name('help');
 
-Auth::routes([
-    'verify' => true,
-]);
-Route::get('login/facebook', 'Auth\LoginController@redirectToFacebook')
-    ->name('facebookLogin');
-Route::get('login/facebook/callback',
-    'Auth\LoginController@handleFacebookCallback');
-Route::get('login/google', 'Auth\LoginController@redirectToGoogle')
-    ->name('googleLogin');
-Route::get('login/google/callback',
-    'Auth\LoginController@handleGoogleCallback');
+    Auth::routes([
+        'verify' => true,
+    ]);
+    Route::get('login/facebook', 'Auth\LoginController@redirectToFacebook')
+        ->name('facebookLogin');
+    Route::get('login/facebook/callback',
+        'Auth\LoginController@handleFacebookCallback');
+    Route::get('login/google', 'Auth\LoginController@redirectToGoogle')
+        ->name('googleLogin');
+    Route::get('login/google/callback',
+        'Auth\LoginController@handleGoogleCallback');
 
-Route::resource('user', 'UserController')->except([
-    'index',
-    'create',
-    'store',
-    'show',
-]);
+    Route::resource('user', 'UserController')->except([
+        'index',
+        'create',
+        'store',
+        'show',
+    ]);
 
-Route::prefix('comic')->name('comic.')->group(function () {
-    Route::get('view/{comicId?}/{index?}', 'ComicController@view')->name('view');
-    Route::post('{comic}/subscribe', 'ComicController@subscribe')->name('subscribe');
-    Route::post('{comic}/unsubscribe', 'ComicController@unsubscribe')->name('unsubscribe');
-    Route::post('request', 'ComicController@request')->name('request');
-    Route::get('{comicStrip}/image/{index?}', 'ComicController@getStripImage')->name('image');
-});
-
-Route::namespace('Admin')
-    ->prefix('admin')
-    ->name('admin.')
-    ->group(function () {
-        Route::middleware('can:admin-user')->group(function () {
-            Route::resource('user', 'UserController')->except(['show']);
-        });
-
-        Route::middleware('can:admin-comic')->group(function () {
-            Route::get('comic/{comic}/add-strip', 'ComicStripController@create')->name('comicStrip.create');
-            Route::resource('comic', 'ComicController');
-            Route::get('comicStrip/{comicStrip}/image/{index?}', 'ComicStripController@image')->name('comicStrip.image');
-            Route::get('comicStrip/{comicStrip}/refresh', 'ComicStripController@refresh')->name('comicStrip.refresh');
-            Route::resource('comicStrip', 'ComicStripController')->except([
-                'create',
-                'index',
-                'show',
-            ]);
-        });
+    Route::prefix('comic')->name('comic.')->group(function () {
+        Route::get('view/{comicId?}/{index?}', 'ComicController@view')->name('view');
+        Route::post('{comic}/subscribe', 'ComicController@subscribe')->name('subscribe');
+        Route::post('{comic}/unsubscribe', 'ComicController@unsubscribe')->name('unsubscribe');
+        Route::post('request', 'ComicController@request')->name('request');
+        Route::get('{comicStrip}/image/{index?}', 'ComicController@getStripImage')->name('image');
     });
+
+    Route::namespace('Admin')
+        ->prefix('admin')
+        ->name('admin.')
+        ->group(function () {
+            Route::middleware('can:admin-user')->group(function () {
+                Route::resource('user', 'UserController')->except(['show']);
+            });
+
+            Route::middleware('can:admin-comic')->group(function () {
+                Route::get('comic/{comic}/add-strip', 'ComicStripController@create')->name('comicStrip.create');
+                Route::resource('comic', 'ComicController');
+                Route::get('comicStrip/{comicStrip}/image/{index?}', 'ComicStripController@image')->name('comicStrip.image');
+                Route::get('comicStrip/{comicStrip}/refresh', 'ComicStripController@refresh')->name('comicStrip.refresh');
+                Route::resource('comicStrip', 'ComicStripController')->except([
+                    'create',
+                    'index',
+                    'show',
+                ]);
+            });
+        });
+});

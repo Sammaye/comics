@@ -2,6 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../comics-config" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../laravel-flash" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../laravel-gridview" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../laravel-permissions" vcs="Git" />
