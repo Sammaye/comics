@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Traits\RedirectsUsers;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
 use sammaye\Flash\Support\Flash;
@@ -21,7 +20,7 @@ class ResetPasswordController extends Controller
     |
     */
 
-    use ResetsPasswords, RedirectsUsers;
+    use ResetsPasswords;
 
     /**
      * Where to redirect users after resetting their password.
@@ -51,5 +50,19 @@ class ResetPasswordController extends Controller
     {
         Flash::success(trans($response));
         return redirect($this->redirectPath());
+    }
+
+    /**
+     * Get the post register / login redirect path.
+     *
+     * @return string
+     */
+    public function redirectPath()
+    {
+        if (method_exists($this, 'redirectTo')) {
+            return $this->redirectTo();
+        }
+
+        return route(property_exists($this, 'redirectTo') ? $this->redirectTo : 'home');
     }
 }

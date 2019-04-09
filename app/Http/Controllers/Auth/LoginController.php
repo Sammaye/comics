@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Auth;
 use App\Exceptions\FacebookUserMismatch;
 use App\Exceptions\GoogleUserMismatch;
 use App\Http\Controllers\Controller;
-use App\Traits\RedirectsUsers;
 use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Str;
@@ -25,7 +24,7 @@ class LoginController extends Controller
     |
     */
 
-    use AuthenticatesUsers, RedirectsUsers;
+    use AuthenticatesUsers;
 
     /**
      * Where to redirect users after login.
@@ -118,5 +117,19 @@ class LoginController extends Controller
 
         $this->guard()->login($user);
         return redirect()->intended($this->redirectPath());
+    }
+
+    /**
+     * Get the post register / login redirect path.
+     *
+     * @return string
+     */
+    public function redirectPath()
+    {
+        if (method_exists($this, 'redirectTo')) {
+            return $this->redirectTo();
+        }
+
+        return route(property_exists($this, 'redirectTo') ? $this->redirectTo : 'home');
     }
 }

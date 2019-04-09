@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Traits\RedirectsUsers;
 use Illuminate\Foundation\Auth\VerifiesEmails;
 use Illuminate\Http\Request;
 
@@ -20,7 +19,7 @@ class VerificationController extends Controller
     |
     */
 
-    use VerifiesEmails, RedirectsUsers;
+    use VerifiesEmails;
 
     /**
      * Where to redirect users after verification.
@@ -51,5 +50,19 @@ class VerificationController extends Controller
     public function show(Request $request)
     {
         abort(404);
+    }
+
+    /**
+     * Get the post register / login redirect path.
+     *
+     * @return string
+     */
+    public function redirectPath()
+    {
+        if (method_exists($this, 'redirectTo')) {
+            return $this->redirectTo();
+        }
+
+        return route(property_exists($this, 'redirectTo') ? $this->redirectTo : 'home');
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Traits\RedirectsUsers;
 use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -22,7 +21,7 @@ class RegisterController extends Controller
     |
     */
 
-    use RegistersUsers, RedirectsUsers;
+    use RegistersUsers;
 
     /**
      * Where to redirect users after registration.
@@ -75,5 +74,19 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+    }
+
+    /**
+     * Get the post register / login redirect path.
+     *
+     * @return string
+     */
+    public function redirectPath()
+    {
+        if (method_exists($this, 'redirectTo')) {
+            return $this->redirectTo();
+        }
+
+        return route(property_exists($this, 'redirectTo') ? $this->redirectTo : 'home');
     }
 }
