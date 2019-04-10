@@ -93,17 +93,18 @@ class Comic extends Model
 
         self::creating(function($model){
             $model->slug = Str::slug($model->title);
-            if ($model->description) {
+            if ($model->description && !$model->abstract) {
                 $model->abstract = Str::limit($model->description, 150);
             }
         });
 
         self::updating(function($model){
             $model->slug = Str::slug($model->title);
-            if ($model->isDirty('description')) {
+            if (
+                $model->isDirty('description') ||
+                strlen($model->abstract) <= 0
+            ) {
                 $model->abstract = Str::limit($model->description, 150);
-            } else {
-                $model->abstract = null;
             }
         });
     }
