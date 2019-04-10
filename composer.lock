@@ -2417,12 +2417,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sammaye/laravel-permission.git",
-                "reference": "eb2b5fabb95d77365d895132abac020202a62a85"
+                "reference": "1ec45963963896a9a9ea0408b30734554cbed384"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Sammaye/laravel-permission/zipball/eb2b5fabb95d77365d895132abac020202a62a85",
-                "reference": "eb2b5fabb95d77365d895132abac020202a62a85",
+                "url": "https://api.github.com/repos/Sammaye/laravel-permission/zipball/1ec45963963896a9a9ea0408b30734554cbed384",
+                "reference": "1ec45963963896a9a9ea0408b30734554cbed384",
                 "shasum": ""
             },
             "require": {
@@ -2457,7 +2457,7 @@
             "keywords": [
                 "laravel"
             ],
-            "time": "2019-03-29T00:31:28+00:00"
+            "time": "2019-04-10T17:28:09+00:00"
         },
         {
             "name": "sammaye/monolog-laravel-swiftmailer-handler",
