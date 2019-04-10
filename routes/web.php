@@ -32,7 +32,7 @@ Route::prefix(config('app.base_url'))->group(function(){
         'create',
         'store',
         'show',
-    ]);
+    ])->middleware('auth');
 
     Route::prefix('comic')->name('comic.')->group(function () {
         Route::get('view/{comicId?}/{index?}', 'ComicController@view')->name('view');
