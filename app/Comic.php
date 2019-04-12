@@ -254,14 +254,14 @@ class Comic extends Model
                 $className = '\App\Scrapers\\' . $this->scraper;
                 if (!class_exists($className)) {
                     throw new InvalidArgumentException(__(
-                        '#:id as an non-existent adapter: :class',
+                        '#:id has an non-existent adapter: :class',
                         ['id' => $this->id, 'class' => $this->scraper]
                     ));
                 }
                 $this->scraperObject = new $className($this);
             } else {
                 throw new InvalidArgumentException(__(
-                    '#:id as an non-existent adapter: :class',
+                    '#:id has an non-existent adapter: :class',
                     ['id' => $this->id, 'class' => $this->scraper]
                 ));
             }

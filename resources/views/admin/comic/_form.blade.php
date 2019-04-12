@@ -206,7 +206,6 @@
                    class="form-control{{ $errors->has('index_format') ? ' is-invalid' : '' }}"
                    name="index_format"
                    value="{{ old('index_format', $model->index_format) }}"
-                   required
             >
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $errors->first('index_format') }}</strong>
