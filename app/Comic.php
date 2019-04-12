@@ -245,6 +245,11 @@ class Comic extends Model
         return Validator::make($request->all(), $rules);
     }
 
+    public function getScraperAttribute($value)
+    {
+        return $value ?? 'BaseScraper';
+    }
+
     public function scraperObject()
     {
         if ($this->scraperObject === null) {
