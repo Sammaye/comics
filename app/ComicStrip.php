@@ -29,7 +29,7 @@ class ComicStrip extends Model
     ];
 
     protected $casts = [
-        'date' => 'datetime',
+        //'date' => 'datetime',
     ];
 
     public function comic()

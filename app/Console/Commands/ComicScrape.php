@@ -13,7 +13,7 @@ class ComicScrape extends Command
      *
      * @var string
      */
-    protected $signature = 'comic:scrape {id?} {force=false}';
+    protected $signature = 'comic:scrape {id?} {--force}';
 
     /**
      * The console command description.
@@ -40,23 +40,23 @@ class ComicScrape extends Command
      *
      * @return mixed
      */
-    public function handle($id = null, $force = null)
+    public function handle()
     {
         $query = Comic::query();
 
-        if ($id) {
+        if ($this->argument('id')) {
             $query->where('_id', $this->argument('id'))
                 ->orWhere('title', $this->argument('id'));
 
             if ($query->count() <= 0) {
-                throw (new ModelNotFoundException)->setModel(new Comic, $id);
+                throw (new ModelNotFoundException)->setModel(new Comic, $this->argument('id'));
             }
         }
 
         $comics = $query->get();
 
         foreach($comics as $comic) {
-            $comic->scrapeCron($this->argument('force'));
+            $comic->scrapeCron($this->option('force'));
         }
 
         return 0;
