@@ -8,3 +8,4 @@ npm install
 npm run production
 php artisan config:cache
 php artisan route:cache
+composer dump-autoload
