@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/../laravel-flash/.idea/laravel-flash.iml" filepath="$PROJECT_DIR$/../laravel-flash/.idea/laravel-flash.iml" />
       <module fileurl="file://$PROJECT_DIR$/../laravel-gridview/.idea/laravel-gridview.iml" filepath="$PROJECT_DIR$/../laravel-gridview/.idea/laravel-gridview.iml" />
       <module fileurl="file://$PROJECT_DIR$/../laravel-permissions/.idea/laravel-permissions.iml" filepath="$PROJECT_DIR$/../laravel-permissions/.idea/laravel-permissions.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../server/.idea/server.iml" filepath="$PROJECT_DIR$/../server/.idea/server.iml" />
     </modules>
   </component>
 </project>
