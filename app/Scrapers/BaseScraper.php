@@ -144,7 +144,7 @@ Class BaseScraper
                     $imageUrl = str_replace($filename, $encodedFilename, $model->image_url);
                 }
 
-                if (($binary = file_get_contents($imageUrl))) {
+                if (($binary = file_get_contents(rawurldecode($imageUrl)))) {
                     $model->image_md5 = md5($binary);
                     $model->img = new Binary($binary, Binary::TYPE_GENERIC);
                     $model->skip = 0;
