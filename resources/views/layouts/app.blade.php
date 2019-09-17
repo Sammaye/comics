@@ -138,8 +138,14 @@
             @elseif(Auth::user() && !Auth::user()->hasVerifiedEmail())
                 <div class="alert alert-danger mb-0 alert-sticky-flash" role="alert">
                     <div  class="container">
+                        <form id="resend-email" class="d-none" method="POST" action="{{ route('verification.resend') }}">
+                            @csrf
+                            <button type="submit">
+                                {{ __('Resend') }}
+                            </button>
+                        </form>
                         {!! __(
-                            'You must verify your E-Mail address before receiving E-Mails, <a href=":url">please click here to verify</a>',
+                            'You must verify your E-Mail address before receiving E-Mails, <a href=":url" onclick="$(\'#resend-email\').submit()">please click here to verify</a>',
                             ['url' => route('verification.resend')]
                         ) !!}
                     </div>

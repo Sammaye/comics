@@ -39,6 +39,7 @@ class isDebugBarEnabled
     public function handle($request, Closure $next)
     {
         $user = $this->auth->user();
+        \Debugbar::enable();
         /*
          * TODO none of it works...
         if ($user->can('root')) {

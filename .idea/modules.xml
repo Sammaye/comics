@@ -6,8 +6,10 @@
       <module fileurl="file://$PROJECT_DIR$/../comics-config/.idea/comics-config.iml" filepath="$PROJECT_DIR$/../comics-config/.idea/comics-config.iml" />
       <module fileurl="file://$PROJECT_DIR$/../laravel-flash/.idea/laravel-flash.iml" filepath="$PROJECT_DIR$/../laravel-flash/.idea/laravel-flash.iml" />
       <module fileurl="file://$PROJECT_DIR$/../laravel-gridview/.idea/laravel-gridview.iml" filepath="$PROJECT_DIR$/../laravel-gridview/.idea/laravel-gridview.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../laravel-mongodb/.idea/laravel-mongodb.iml" filepath="$PROJECT_DIR$/../laravel-mongodb/.idea/laravel-mongodb.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../laravel-mongodb-session/.idea/laravel-mongodb-session.iml" filepath="$PROJECT_DIR$/../laravel-mongodb-session/.idea/laravel-mongodb-session.iml" />
       <module fileurl="file://$PROJECT_DIR$/../laravel-permissions/.idea/laravel-permissions.iml" filepath="$PROJECT_DIR$/../laravel-permissions/.idea/laravel-permissions.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../server/.idea/server.iml" filepath="$PROJECT_DIR$/../server/.idea/server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../monolog-laravel-swiftmailer-handler/.idea/monolog-laravel-swiftmailer-handler.iml" filepath="$PROJECT_DIR$/../monolog-laravel-swiftmailer-handler/.idea/monolog-laravel-swiftmailer-handler.iml" />
     </modules>
   </component>
 </project>
