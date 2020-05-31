@@ -1,0 +1,9 @@
+[mysqld]
+# Server
+# sql_mode=NO_ENGINE_SUBSTITUTION
+
+[mysql]
+# In-built client
+
+[client]
+# All clients, i.e. enforcing password for all connections

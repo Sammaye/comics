@@ -145,7 +145,7 @@
                             </button>
                         </form>
                         {!! __(
-                            'You must verify your E-Mail address before receiving E-Mails, <a href=":url" onclick="$(\'#resend-email\').submit()">please click here to verify</a>',
+                            'You must verify your E-Mail address before receiving E-Mails, <a href=":url" onclick="$(\'#resend-email\').submit(); return false;">please click here to verify</a>',
                             ['url' => route('verification.resend')]
                         ) !!}
                     </div>

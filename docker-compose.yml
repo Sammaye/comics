@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  app:
+    build: ./docker
+    container_name: comics_app
+    depends_on:
+      - phpmyadmin
+      - mongo-express
+      - mail
+    environment:
+      PHP_VERSION: 7.2
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/log:/var/log/nginx
+    ports:
+      - 8000:80
+
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./docker/mysql/conf.d:/etc/mysql/conf.d:ro
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro
+    environment:
+      MYSQL_USER: root
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: "main"
+    ports:
+      - 8001:3306
+
+  mongodb:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME:
+      MONGO_INITDB_ROOT_PASSWORD:
+    volumes:
+      - mongodb-data:/data/db
+      - ./docker/mongodb/conf.d/mongod.conf:/etc/mongod.conf:ro
+      - ./docker/mongodb/init:/docker-entrypoint-initdb.d:ro
+    command:
+      --config /etc/mongod.conf
+    ports:
+      - 8002:27017
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    depends_on:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+
+  mongo-express:
+    image: mongo-express
+    depends_on:
+      - mongodb
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME:
+      ME_CONFIG_MONGODB_ADMINPASSWORD:
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_SITE_BASEURL: /mongo-express.server
+
+  mail:
+    image: schickling/mailcatcher
+
+volumes:
+  mysql-data:
+  mongodb-data:
