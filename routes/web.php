@@ -61,10 +61,15 @@ Route::prefix(config('app.base_url'))->group(function () {
             Route::middleware('can:admin-comic')->group(function () {
                 Route::get('comic/{comic}/add-strip', 'ComicStripController@create')
                     ->name('comicStrip.create');
-                Route::post('comic/get-admin-comics-table-data', 'ComicController@getAdminComicsTableData')
-                    ->name('comic.getAdminTableData');
-                Route::post('comic/admin-comics-table-delete', 'ComicController@adminComicsTableDelete')
-                    ->name('comic.deleteAdminTableData');
+
+                Route::post('comic/admin-table-data', 'ComicController@adminTableData')
+                    ->name('comic.adminTableData');
+                Route::post('comic/admin-table-delete', 'ComicController@adminTableDelete')
+                    ->name('comic.adminTableDelete');
+
+                Route::post('comic/logs-admin-table-data', 'ComicController@logsAdminTableData')
+                    ->name('comic.logsAdminTableData');
+
                 Route::resource('comic', 'ComicController');
                 Route::get('comicStrip/{comicStrip}/image/{index?}', 'ComicStripController@image')
                     ->name('comicStrip.image');

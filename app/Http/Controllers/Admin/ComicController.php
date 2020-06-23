@@ -86,42 +86,43 @@ class ComicController extends Controller
             ]);
     }
 
-    public function getAdminComicsTableData(Request $request)
-    {
+    private function filterAdminTableModel($request, $query, $filterAllowedFields = []) {
         $currentPage = (int)$request->input('currentPage') ?: 1;
         $perPage = (int)$request->input('perPage') ?: 20;
         $sortField = $request->input('sortBy');
         $sortDir = $request->input('sortDesc', false) ? 'desc' : 'asc';
 
-        $filterAllowedFields = ['_id', 'title', 'abstract'];
         $filter = trim($request->input('filter'));
         $filterOn = $request->input('filterOn');
         $filterOn = is_array($filterOn) && count($filterOn)
             ? array_intersect($filterOn, $filterAllowedFields)
             : $filterAllowedFields;
 
-        $comics = Comic::query();
-
         if ($filter) {
             foreach ($filterOn as $field) {
-                $comics->where($field, $filter);
+                $query->where($field, $filter);
             }
         }
 
         if ($sortField) {
-            $comics->orderBy($sortField, $sortDir);
+            $query->orderBy($sortField, $sortDir);
         } else {
-            $comics->orderBy('_id', 'asc');
+            $query->orderBy('_id', 'asc');
         }
 
-        $total_comics = $comics->count();
+        $total = $query->count();
 
-        $comics->skip($perPage * ($currentPage - 1));
-        $comics->limit($perPage);
+        $query->skip($perPage * ($currentPage - 1));
+        $query->limit($perPage);
 
-        $comics = $comics->get();
+        return [$query->get(), $total];
+    }
 
-        $items = $comics->map(function ($item, $key) {
+    public function adminTableData(Request $request)
+    {
+        [$models, $total] = $this->filterAdminTableModel($request, Comic::query(), ['_id', 'title', 'abstract']);
+
+        $items = $models->map(function ($item, $key) {
             return [
                 '_id' => $item->_id->__toString(),
                 'title' => $item->title,
@@ -130,18 +131,18 @@ class ComicController extends Controller
                 'created_at' => $item->created_at->format('Y-m-d H:i:s'),
                 'updated_at' => $item->updated_at->format('Y-m-d H:i:s'),
                 'edit_url' => route('admin.comic.edit', ['comic' => $item->_id]),
-                'delete_url' => route('admin.comic.deleteAdminTableData'),
+                'delete_url' => route('admin.comic.adminTableDelete', [], false),
             ];
         });
 
         return response()->json([
             'success' => true,
             'items' => $items,
-            'items_count' => $total_comics,
+            'items_count' => $total,
         ]);
     }
 
-    public function adminComicsTableDelete(Request $request)
+    public function adminTableDelete(Request $request)
     {
         $comic = Comic::query()->where('_id', $request->input('id'))->firstOrFail();
 
@@ -152,6 +153,30 @@ class ComicController extends Controller
                 'success' => true,
                 'id' => $comic->_id->__toString(),
             ]);
+    }
+
+    public function logsAdminTableData(Request $request)
+    {
+        [$models, $total] = $this->filterAdminTableModel($request, LogToDB::model(
+            null,
+            'mongodb',
+            config('logging.channels.scraper.collection')
+        )->newModelQuery(), ['_id', 'message', 'created_at']);
+
+        $items = $models->map(function ($item, $key) {
+            return [
+                '_id' => $item->_id->__toString(),
+                'message' => $item->message,
+                'trace' => $item->trace,
+                'created_at' => $item->created_at->format('Y-m-d H:i:s'),
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'items' => $items,
+            'items_count' => $total,
+        ]);
     }
 
     /**

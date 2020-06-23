@@ -18,13 +18,13 @@
         components: {AdminTableComponent},
         data() {
             return {
-                id: 'comics-admin-table',
+                id: 'logs-admin-table',
                 primaryKey: '_id',
 
-                apiUrl: '/admin/comic/admin-table-data',
+                apiUrl: '/admin/comic/logs-admin-table-data',
                 apiData: {},
 
-                filterOn: ['title'],
+                filterOn: ['message'],
 
                 sortBy: '_id',
                 sortDesc: true,
@@ -38,35 +38,21 @@
                         filterable: true
                     },
                     {
-                        key: 'title',
-                        label: 'Title',
+                        key: 'message',
+                        label: 'Message',
                         sortable: true,
                         filterable: true
                     },
                     {
-                        key: 'abstract',
-                        label: 'Abstract',
+                        key: 'trace',
+                        label: 'Trace',
                         sortable: true,
                         filterable: true
-                    },
-                    {
-                        key: 'strips',
-                        label: 'Strips',
-                        sortable: false,
                     },
                     {
                         key: 'created_at',
                         label: 'Created At',
                         sortable: true
-                    },
-                    {
-                        key: 'updated_at',
-                        label: 'Updated At',
-                        sortable: true
-                    },
-                    {
-                        key: 'actions',
-                        label: ''
                     },
                 ],
             }
