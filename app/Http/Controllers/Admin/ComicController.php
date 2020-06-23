@@ -86,6 +86,74 @@ class ComicController extends Controller
             ]);
     }
 
+    public function getAdminComicsTableData(Request $request)
+    {
+        $currentPage = (int)$request->input('currentPage') ?: 1;
+        $perPage = (int)$request->input('perPage') ?: 20;
+        $sortField = $request->input('sortBy');
+        $sortDir = $request->input('sortDesc', false) ? 'desc' : 'asc';
+
+        $filterAllowedFields = ['_id', 'title', 'abstract'];
+        $filter = trim($request->input('filter'));
+        $filterOn = $request->input('filterOn');
+        $filterOn = is_array($filterOn) && count($filterOn)
+            ? array_intersect($filterOn, $filterAllowedFields)
+            : $filterAllowedFields;
+
+        $comics = Comic::query();
+
+        if ($filter) {
+            foreach ($filterOn as $field) {
+                $comics->where($field, $filter);
+            }
+        }
+
+        if ($sortField) {
+            $comics->orderBy($sortField, $sortDir);
+        } else {
+            $comics->orderBy('_id', 'asc');
+        }
+
+        $total_comics = $comics->count();
+
+        $comics->skip($perPage * ($currentPage - 1));
+        $comics->limit($perPage);
+
+        $comics = $comics->get();
+
+        $items = $comics->map(function ($item, $key) {
+            return [
+                '_id' => $item->_id->__toString(),
+                'title' => $item->title,
+                'abstract' => $item->abstract,
+                'strips' => $item->strips->count(),
+                'created_at' => $item->created_at->format('Y-m-d H:i:s'),
+                'updated_at' => $item->updated_at->format('Y-m-d H:i:s'),
+                'edit_url' => route('admin.comic.edit', ['comic' => $item->_id]),
+                'delete_url' => route('admin.comic.deleteAdminTableData'),
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'items' => $items,
+            'items_count' => $total_comics,
+        ]);
+    }
+
+    public function adminComicsTableDelete(Request $request)
+    {
+        $comic = Comic::query()->where('_id', $request->input('id'))->firstOrFail();
+
+        $comic->delete();
+
+        return response()
+            ->json([
+                'success' => true,
+                'id' => $comic->_id->__toString(),
+            ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -99,7 +167,7 @@ class ComicController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -130,7 +198,7 @@ class ComicController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit(Comic $comic)
@@ -149,8 +217,8 @@ class ComicController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Comic $comic)
@@ -180,7 +248,7 @@ class ComicController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(Comic $comic)

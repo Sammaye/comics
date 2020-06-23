@@ -8,6 +8,7 @@
             <div class="py-4">
                 <a href="{{ route('admin.comic.create') }}" class="btn btn-outline-primary btn-lg">Create Comic</a>
             </div>
+            <comics-admin-table-component></comics-admin-table-component>
             {!!
                 \sammaye\Grid\Grid::make('comic')
                     ->setData($comics)
