@@ -67,6 +67,9 @@ Route::prefix(config('app.base_url'))->group(function () {
                 Route::post('comic/admin-table-delete', 'ComicController@adminTableDelete')
                     ->name('comic.adminTableDelete');
 
+                Route::post('comic/strips-admin-table-data/{comic}', 'ComicController@stripsAdminTableData')
+                    ->name('comic.stripsAdminTableData');
+
                 Route::post('comic/logs-admin-table-data', 'ComicController@logsAdminTableData')
                     ->name('comic.logsAdminTableData');
 

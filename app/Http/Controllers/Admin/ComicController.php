@@ -20,73 +20,17 @@ class ComicController extends Controller
      */
     public function index(Request $request)
     {
-        $comics = Comic::query();
-
-        foreach (array_filter($request->input()) as $k => $v) {
-            if (!preg_match('/^comic-/', $k)) {
-                continue;
-            }
-
-            $column_name = str_replace('comic-', '', $k);
-            if ($k === 'comic-sort') {
-                $comics->orderBy(
-                    trim($v, '-'),
-                    strpos($v, '-') === 0 ? 'DESC' : 'ASC'
-                );
-            } elseif (
-                Schema::hasColumn((new Comic)->getTable(), $column_name) &&
-                $k !== 'comic-page'
-            ) {
-                if ($column_name === 'id') {
-                    $comics->where('_id', new ObjectId($v));
-                } else {
-                    $comics->where(
-                        $column_name,
-                        'regexp',
-                        '/' . $v . '/i'
-                    );
-                }
-            }
-        }
-
-        $logs = LogToDB::model(
-            null,
-            'mongodb',
-            config('logging.channels.scraper.collection')
-        )->newModelQuery();
-
-        foreach (array_filter($request->input()) as $k => $v) {
-            if (!preg_match('/^log-/', $k)) {
-                continue;
-            }
-
-            $column_name = str_replace('log-', '', $k);
-            if ($k === 'log-sort') {
-                $logs->orderBy(
-                    trim($v, '-'),
-                    strpos($v, '-') === 0 ? 'DESC' : 'ASC'
-                );
-            } elseif ($k !== 'log-page') {
-                if ($column_name === 'id') {
-                    $logs->where('_id', '=', new ObjectId($v));
-                } else {
-                    $logs->where(
-                        $column_name,
-                        'regexp',
-                        '/' . $v . '/i'
-                    );
-                }
-            }
-        }
-
-        return view('admin.comic.index')
-            ->with([
-                'comics' => $comics,
-                'logs' => $logs,
-            ]);
+        return view('admin.comic.index');
     }
 
-    private function filterAdminTableModel($request, $query, $filterAllowedFields = []) {
+    /**
+     * @param $request
+     * @param $query
+     * @param array $filterAllowedFields
+     * @return array
+     */
+    private function filterAdminTableModel($request, $query, $filterAllowedFields = [])
+    {
         $currentPage = (int)$request->input('currentPage') ?: 1;
         $perPage = (int)$request->input('perPage') ?: 20;
         $sortField = $request->input('sortBy');
@@ -118,6 +62,10 @@ class ComicController extends Controller
         return [$query->get(), $total];
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function adminTableData(Request $request)
     {
         [$models, $total] = $this->filterAdminTableModel($request, Comic::query(), ['_id', 'title', 'abstract']);
@@ -142,6 +90,11 @@ class ComicController extends Controller
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
     public function adminTableDelete(Request $request)
     {
         $comic = Comic::query()->where('_id', $request->input('id'))->firstOrFail();
@@ -155,6 +108,10 @@ class ComicController extends Controller
             ]);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function logsAdminTableData(Request $request)
     {
         [$models, $total] = $this->filterAdminTableModel($request, LogToDB::model(
@@ -202,10 +159,13 @@ class ComicController extends Controller
         $validator = $model->getValidator($request);
 
         if ($validator->fails()) {
-            return redirect()
-                ->route('admin.comic.create')
-                ->withInput()
-                ->withErrors($validator);
+            return response()
+                ->json([
+                    'success' => false,
+                    'errors' => collect($validator->errors()->getMessages())->map(function ($item, $key) {
+                        return $item[0];
+                    })
+                ]);
         }
 
         $modelData = [];
@@ -216,8 +176,12 @@ class ComicController extends Controller
         $comic = Comic::create($modelData);
 
         Flash::success(__('Comic Created'));
-        return redirect()
-            ->route('admin.comic.edit', ['comic' => $comic]);
+        return response()
+            ->json([
+                'success' => true,
+                'redirect_to' => route('admin.comic.edit', ['comic' => $comic], false),
+                'data' => $comic->toArray(),
+            ]);
     }
 
     /**
@@ -240,6 +204,37 @@ class ComicController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @param Comic $comic
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function stripsAdminTableData(Request $request, Comic $comic)
+    {
+        $query = ComicStrip::query()
+            ->where('comic_id', $comic->_id);
+
+        [$models, $total] = $this->filterAdminTableModel($request, $query, ['_id', 'url', 'image_url', 'index']);
+
+        $items = $models->map(function ($item, $key) {
+            return [
+                '_id' => $item->_id->__toString(),
+                'url' => $item->url,
+                'image_url' => $item->image_url,
+                'image_md5' => $item->image_md5,
+                'index' => $item->index,
+                'created_at' => $item->created_at->format('Y-m-d H:i:s'),
+                'updated_at' => $item->updated_at->format('Y-m-d H:i:s'),
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'items' => $items,
+            'items_count' => $total,
+        ]);
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
@@ -252,10 +247,13 @@ class ComicController extends Controller
         $validator = $comic->getValidator($request);
 
         if ($validator->fails()) {
-            return redirect()
-                ->route('admin.comic.edit', ['comic' => $comic])
-                ->withInput()
-                ->withErrors($validator);
+            return response()
+                ->json([
+                    'success' => false,
+                    'errors' => collect($validator->errors()->getMessages())->map(function ($item, $key) {
+                        return $item[0];
+                    })
+                ]);
         }
 
         $modelData = [];
@@ -266,8 +264,12 @@ class ComicController extends Controller
         $comic->forceFill($modelData)->save();
 
         Flash::success(__('Comic Updated'));
-        return redirect()
-            ->route('admin.comic.edit', ['comic' => $comic]);
+        return response()
+            ->json([
+                'success' => true,
+                'redirect_to' => route('admin.comic.edit', ['comic' => $comic], false),
+                'data' => $comic->toArray(),
+            ]);
     }
 
     /**

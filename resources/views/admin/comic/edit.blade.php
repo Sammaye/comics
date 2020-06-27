@@ -6,20 +6,49 @@
     <div class="row">
         <div class="col">
             <h1 class="mb-4 text-truncate">{{ __('Edit Comic #:id', ['id' => $model->id]) }}</h1>
-            <form method="post" action="{{ route('admin.comic.update', ['comic' => $model]) }}">
-                @method('PUT')
-                @csrf
-                <div class="comic-form">
-                    @include('admin.comic._form', ['model' => $model])
-                </div>
-                <div class="form-group mt-3">
-                    <button type="submit"
-                            class="btn btn-lg btn-outline-success"
-                    >
-                        {{ __('Save Comic') }}
-                    </button>
-                </div>
-            </form>
+
+            <admin-comic-form-component
+                :comic-types="{{ json_encode(
+                    collect((new \App\Comic)->getTypes())->map(function($item, $key){
+                        return ['value' => $key, 'text' => $item];
+                    })->values()
+                ) }}"
+                :comic-scrapers="{{ json_encode(
+                    collect((new \App\Comic)->getScrapers())->map(function($item, $key){
+                        return ['value' => $key, 'text' => $key];
+                    })->values()
+                ) }}"
+                :comic-scraper-user-agents="{{ json_encode(
+                    collect((new \App\Comic)->getUserAgents())->map(function($item, $key){
+                        return ['value' => $item, 'text' => $key];
+                    })->values()
+                )  }}"
+                action="{{ route('admin.comic.update', ['comic' => $model]) }}"
+                action-type="PUT"
+                :form="{{ json_encode(
+                    collect($model)->map(function($item, $key){
+                        if (
+                            in_array($key, ['current_index', 'first_index', 'last_index'], true) &&
+                            $item instanceof \MongoDB\BSON\UTCDateTime
+                        ) {
+                            return $item->toDateTime()->format(config('app.inputDateFormat'));
+                        } else {
+                            return $item;
+                        }
+                    })
+                ) }}"
+            >
+                <template #submit="slotProps">
+                    <template v-if="slotProps.isBusy">
+                        <b-button type="button" disabled variant="outline-success" size="lg">
+                            <b-spinner variant="success" type="grow" label="Spinning"></b-spinner>
+                        </b-button>
+                    </template>
+                    <template v-else>
+                        <b-button type="submit" variant="outline-success" size="lg">Save Comic</b-button>
+                    </template>
+                </template>
+            </admin-comic-form-component>
         </div>
     </div>
     <hr>
@@ -29,40 +58,7 @@
             <div class="py-4">
                 <a href="{{ route('admin.comicStrip.create', ['comic' => $model]) }}" class="btn btn-lg btn-outline-primary">{{ __('Add Strip') }}</a>
             </div>
-            {!!
-                \sammaye\Grid\Grid::make('comicStrip')
-                    ->setData($comicStrips)
-                    ->setAttributes(['class' => 'table table-bordered table-striped gridview'])
-                    ->setColumns([
-                        \sammaye\Grid\Column::make('id')
-                            ->setDataCellTag('th')
-                            ->setLabel(__('#'))
-                            ->setAttributes(['scope' => 'row']),
-                        \sammaye\Grid\Column::make('url'),
-                        \sammaye\Grid\Column::make('image_url'),
-                        \sammaye\Grid\Column::make('image_md5')
-                            ->setFilterCell(false),
-                        \sammaye\Grid\Column::make('index')
-                            ->setDataContent(function($column, $row){
-                                if ($row->index instanceof \Carbon\Carbon) {
-                                    return $row->index->format('Y-m-d');
-                                }
-                                return $row->index;
-                            }),
-                        \sammaye\Grid\Column::make('created_at')
-                            ->setFilterCell(false),
-                        \sammaye\Grid\Column::make('updated_at')
-                            ->setFilterCell(false),
-                        \sammaye\Grid\ActionColumn::make('actions')
-                            ->setEditButton(function($column, $row){
-                                return route('admin.comicStrip.edit', ['comicStrip' => $row]);
-                            }, __('Edit'))
-                            ->setDeleteButton(function($column, $row){
-                                return route('admin.comicStrip.destroy', ['comicStrip' => $row]);
-                            }, __('Delete'))
-                    ])
-                ->getTable()
-            !!}
+            <comic-strips-admin-table-component comic-id="{{ $model->_id->__toString() }}"></comic-strips-admin-table-component>
         </div>
     </div>
 </div>

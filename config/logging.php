@@ -36,7 +36,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['daily', 'email'],
+            'channels' => ['daily', /*'email'*/],
             'ignore_exceptions' => false,
         ],
 
