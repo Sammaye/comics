@@ -55,6 +55,10 @@ Route::prefix(config('app.base_url'))->group(function () {
         ->name('admin.')
         ->group(function () {
             Route::middleware('can:admin-user')->group(function () {
+                Route::post('user/admin-table-data', 'UserController@adminTableData')
+                    ->name('user.adminTableData');
+                Route::post('user/admin-table-delete', 'UserController@adminTableDelete')
+                    ->name('user.adminTableDelete');
                 Route::resource('user', 'UserController')->except(['show']);
             });
 

@@ -57,6 +57,9 @@
             <template v-slot:[`cell(${primaryKey})`]="row">
                 <b>{{row.value}}</b>
             </template>
+            <template v-for="slot in slots" v-slot:[`cell(${slot.field})`]="row">
+                <slot :name="slot.name" :row="row"></slot>
+            </template>
             <template v-slot:cell(actions)="row">
                 <b-link href="#" @click.prevent="editItem(row.item, row.index)">Edit</b-link>
                 <b-link href="#" @click.prevent="deleteItem(row.item, row.index)">Delete</b-link>
@@ -75,6 +78,13 @@
 <script>
     export default {
         props: {
+            slots: {
+                type: Array,
+                required: false,
+                default: _ => {
+                    return [];
+                },
+            },
             id: {
                 type: String,
                 required: true

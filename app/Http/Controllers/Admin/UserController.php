@@ -25,34 +25,48 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = User::query();
+        return view('admin.user.index');
+    }
 
-        foreach (array_filter($request->input()) as $k => $v) {
-            $column_name = str_replace('user-', '', $k);
-            if ($k === 'user-sort') {
-                $users->orderBy(
-                    trim($v, '-'),
-                    strpos($v, '-') === 0 ? 'DESC' : 'ASC'
-                );
-            } elseif (
-                Schema::hasColumn((new User)->getTable(), $column_name) &&
-                $k !== 'user-page'
-            ) {
-                if ($column_name === 'id') {
-                    $users->where('_id', new ObjectId($v));
-                } else {
-                    $users->where(
-                        $column_name,
-                        'regexp',
-                        '/' . $v . '/i'
-                    );
-                }
-            }
-        }
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function adminTableData(Request $request)
+    {
+        [$models, $total] = $this->filterAdminTableModel($request, User::query(), ['_id', 'username', 'email']);
 
-        return view('admin.user.index')
-            ->with([
-                'users' => $users,
+        $items = $models->map(function ($item, $key) {
+            return [
+                '_id' => $item->_id->__toString(),
+                'username' => $item->username,
+                'email' => $item->email,
+                'email_verified_at' => $item->email_verified_at->format('Y-m-d H:i:s'),
+                'has_verified_email' => $item->hasVerifiedEmail(),
+                'created_at' => $item->created_at->format('Y-m-d H:i:s'),
+                'updated_at' => $item->updated_at->format('Y-m-d H:i:s'),
+                'edit_url' => route('admin.user.edit', ['user' => $item->_id], false),
+                'delete_url' => route('admin.user.adminTableDelete', [], false),
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'items' => $items,
+            'items_count' => $total,
+        ]);
+    }
+
+    public function adminTableDelete(Request $request)
+    {
+        $user = User::query()->where('_id', $request->input('id'))->firstOrFail();
+
+        $user->delete();
+
+        return response()
+            ->json([
+                'success' => true,
+                'id' => $user->_id->__toString(),
             ]);
     }
 
@@ -69,7 +83,7 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -133,8 +147,8 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param \App\User                 $user
+     * @param \Illuminate\Http\Request $request
+     * @param \App\User $user
      *
      * @return \Illuminate\Http\Response
      */
