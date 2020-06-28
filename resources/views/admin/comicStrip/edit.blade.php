@@ -13,7 +13,7 @@
                     ['id' => $model->id, 'comic' => $model->comic->title]
                 ) }}</h1>
 
-                <admin-comic-strip-form-component
+                <comic-strip-admin-form-component
                     action="{{ route('admin.comicStrip.update', ['comicStrip' => $model]) }}"
                     method="PUT"
                     :errors="{{ json_encode($errors->getMessages(), JSON_FORCE_OBJECT) }}"
@@ -33,7 +33,7 @@
                     refresh-url="{{ route('admin.comicStrip.refresh', ['comicStrip' => $model]) }}"
                     comic-url="{{ route('admin.comic.edit', ['comic' => $model->comic]) }}"
                     comic-title="{{ $model->comic->title }}"
-                ></admin-comic-strip-form-component>
+                ></comic-strip-admin-form-component>
             </div>
         </div>
     </div>

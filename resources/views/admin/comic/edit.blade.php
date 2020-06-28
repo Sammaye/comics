@@ -7,7 +7,7 @@
         <div class="col">
             <h1 class="mb-4 text-truncate">{{ __('Edit Comic #:id', ['id' => $model->id]) }}</h1>
 
-            <admin-comic-form-component
+            <comic-admin-form-component
                 :comic-types="{{ json_encode(
                     collect((new \App\Comic)->getTypes())->map(function($item, $key){
                         return ['value' => $key, 'text' => $item];
@@ -48,7 +48,7 @@
                         <b-button type="submit" variant="outline-success" size="lg">Save Comic</b-button>
                     </template>
                 </template>
-            </admin-comic-form-component>
+            </comic-admin-form-component>
         </div>
     </div>
     <hr>
