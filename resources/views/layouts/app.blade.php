@@ -152,6 +152,7 @@
                 </div>
             @endif
             @include('flash::flash', ['class' => 'mb-0 alert-sticky-flash'])
+            <bv-flash-component></bv-flash-component>
             <main class="">
                 @yield('content')
             </main>

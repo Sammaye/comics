@@ -528,7 +528,7 @@
 
                 request.then(response => {
                     if (response.data.success) {
-                        this.form.data = response.data.data;
+                        this.form = response.data.data;
                         window.location.href = response.data.redirect_to;
                     } else {
                         window.scrollTo(0, 0);

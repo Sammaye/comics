@@ -232,7 +232,7 @@
         methods: {
             validateState(name) {
                 if (this.errors.hasOwnProperty(name)) {
-                    if (this.errors[name].trim().length > 0) {
+                    if (this.errors[name].length > 0) {
                         return false;
                     }
                     return true;

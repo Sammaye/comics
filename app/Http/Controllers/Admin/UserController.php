@@ -41,7 +41,9 @@ class UserController extends Controller
                 '_id' => $item->_id->__toString(),
                 'username' => $item->username,
                 'email' => $item->email,
-                'email_verified_at' => $item->email_verified_at->format('Y-m-d H:i:s'),
+                'email_verified_at' => $item->email_verified_at
+                    ? $item->email_verified_at->format('Y-m-d H:i:s')
+                    : null,
                 'has_verified_email' => $item->hasVerifiedEmail(),
                 'created_at' => $item->created_at->format('Y-m-d H:i:s'),
                 'updated_at' => $item->updated_at->format('Y-m-d H:i:s'),
@@ -107,10 +109,11 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()
-                ->route('admin.user.create')
-                ->withInput()
-                ->withErrors($validator);
+            return response()
+                ->json([
+                    'success' => false,
+                    'errors' => $validator->errors()->getMessages(),
+                ]);
         }
 
         $data = $validator->validated();
@@ -121,10 +124,11 @@ class UserController extends Controller
             'password' => Hash::make($data['password']),
         ]);
 
-        Flash::success(__('User :id Created', ['id' => $user->id]));
-
-        return redirect()
-            ->route('admin.user.edit', ['user' => $user]);
+        return response()
+            ->json([
+                'success' => true,
+                'data' => $user->toArray(),
+            ]);
     }
 
     /**
