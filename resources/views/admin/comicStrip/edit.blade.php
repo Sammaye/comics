@@ -12,30 +12,28 @@
                     'Edit Comic Strip #:id for :comic',
                     ['id' => $model->id, 'comic' => $model->comic->title]
                 ) }}</h1>
-                <form method="post" action="{{ route('admin.comicStrip.update', ['comicStrip' => $model]) }}">
-                    @method('PUT')
-                    @csrf
-                    <div class="comic-strip-form">
-                        @include('admin.comicStrip._form', ['model' => $model])
-                    </div>
-                    <div class="py-4">
-                        <img class="img-fluid"
-                             src="{{ route('admin.comicStrip.image', ['comicStrip' => $model]) }}"
-                        />
-                    </div>
-                    <div class="form-group mt-3">
-                        <button type="submit"
-                                class="btn btn-lg btn-outline-success"
-                        >
-                            {{ __('Save Comic Strip') }}
-                        </button>
-                        <a href="{{ route('admin.comicStrip.refresh', ['comicStrip' => $model]) }}"
-                           class="btn btn-lg btn-outline-secondary ml-2"
-                        >
-                            {{ __('Refresh') }}
-                        </a>
-                    </div>
-                </form>
+
+                <admin-comic-strip-form-component
+                    action="{{ route('admin.comicStrip.update', ['comicStrip' => $model]) }}"
+                    method="PUT"
+                    :errors="{{ json_encode($errors->getMessages(), JSON_FORCE_OBJECT) }}"
+                    :form="{{ json_encode(
+                       collect($model)->map(function($item, $key){
+                            if (
+                                in_array($key, ['date', 'index', 'previous', 'next'], true) &&
+                                $item instanceof \MongoDB\BSON\UTCDateTime
+                            ) {
+                                return $item->toDateTime()->format(config('app.inputDateFormat'));
+                            } else {
+                                return $item;
+                            }
+                        })
+                    ) }}"
+                    image-src="{{ route('admin.comicStrip.image', ['comicStrip' => $model]) }}"
+                    refresh-url="{{ route('admin.comicStrip.refresh', ['comicStrip' => $model]) }}"
+                    comic-url="{{ route('admin.comic.edit', ['comic' => $model->comic]) }}"
+                    comic-title="{{ $model->comic->title }}"
+                ></admin-comic-strip-form-component>
             </div>
         </div>
     </div>

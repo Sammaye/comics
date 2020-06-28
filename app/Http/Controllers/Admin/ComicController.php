@@ -78,7 +78,7 @@ class ComicController extends Controller
                 'strips' => $item->strips->count(),
                 'created_at' => $item->created_at->format('Y-m-d H:i:s'),
                 'updated_at' => $item->updated_at->format('Y-m-d H:i:s'),
-                'edit_url' => route('admin.comic.edit', ['comic' => $item->_id]),
+                'edit_url' => route('admin.comic.edit', ['comic' => $item->_id], false),
                 'delete_url' => route('admin.comic.adminTableDelete', [], false),
             ];
         });
@@ -224,6 +224,8 @@ class ComicController extends Controller
                 'index' => $item->index,
                 'created_at' => $item->created_at->format('Y-m-d H:i:s'),
                 'updated_at' => $item->updated_at->format('Y-m-d H:i:s'),
+                'edit_url' => route('admin.comicStrip.edit', ['comicStrip' => $item->_id], false),
+                'delete_url' => route('admin.comic.stripsAdminTableDelete', [], false),
             ];
         });
 

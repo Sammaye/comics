@@ -553,7 +553,7 @@
         },
         computed: {
             isNewRecord: function() {
-                return typeof this.form._id !== 'undefined';
+                return typeof this.form._id === 'undefined';
             }
         },
         watch: {
