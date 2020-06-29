@@ -127,7 +127,8 @@ class UserController extends Controller
         return response()
             ->json([
                 'success' => true,
-                'data' => $user->toArray(),
+                'flash' => __('User :id Created', ['id' => $user->id]),
+                'data' => $this->getUserModel($user),
             ]);
     }
 
@@ -143,9 +144,60 @@ class UserController extends Controller
         return view('admin.user.edit')
             ->with([
                 'model' => $user,
+                'vue_model' => $this->getUserModel($user),
                 'roles' => Role::all(),
                 'permissions' => Permission::all(),
             ]);
+    }
+
+    private function getUserModel(User $user) {
+
+        $data = $user->toArray() + [
+            'has_verified_email' => $user->hasVerifiedEmail(),
+            'is_blocked' => $user->isBlocked(),
+            'action_url' => route('admin.user.update', ['user' => $user], false),
+            'edit_url' => route('admin.user.edit', ['user' => $user], false),
+            'delete_url' => route('admin.user.destroy', ['user' => $user], false),
+            'page_title' => config('app.name', 'Laravel') . ' - ' . __('Edit User #:id', ['id' => $user->_id]),
+        ];
+
+        $roles = [];
+        $user_roles = [];
+
+        foreach (Role::all() as $role) {
+            $roles[] = [
+                'id' => $role->id,
+                'value' => $role->id,
+                'name' => $role->name,
+            ];
+
+            if ($user->hasRole($role->name)) {
+                $user_roles[] = $role->id;
+            }
+        }
+
+        $data['roles'] = $roles;
+        $data['role'] = $user_roles;
+
+        $permissions = [];
+        $user_permissions = [];
+
+        foreach (Permission::all() as $permission) {
+            $permissions[] = [
+                'id' => $permission->id,
+                'value' => $permission->id,
+                'name' => $permission->name,
+            ];
+
+            if ($user->hasDirectPermission($permission->name)) {
+                $user_permissions[] = $permission->id;
+            }
+        }
+
+        $data['permissions'] = $permissions;
+        $data['permission'] = $user_permissions;
+
+        return $data;
     }
 
     /**
@@ -163,30 +215,36 @@ class UserController extends Controller
                 'blocked_at' => null,
             ])->save();
 
-            Flash::success(__('User Unblocked'));
-
-            return redirect()
-                ->route('admin.user.edit', ['user' => $user]);
+            return response()
+                ->json([
+                    'success' => true,
+                    'flash' => __('User Unblocked'),
+                    'data' => $this->getUserModel($user),
+                ]);
         }
         if ($request->input('action') === 'block') {
             $user->forceFill([
                 'blocked_at' => Carbon::now(),
             ])->save();
 
-            Flash::success(__('User Blocked'));
-
-            return redirect()
-                ->route('admin.user.edit', ['user' => $user]);
+            return response()
+                ->json([
+                    'success' => true,
+                    'flash' => __('User Blocked'),
+                    'data' => $this->getUserModel($user),
+                ]);
         }
         if ($request->input('action') === 'verify_email') {
             $user->forceFill([
                 'email_verified_at' => Carbon::now(),
             ])->save();
 
-            Flash::success(__('User E-Mail Address Verified'));
-
-            return redirect()
-                ->route('admin.user.edit', ['user' => $user]);
+            return response()
+                ->json([
+                    'success' => true,
+                    'flash' => __('User E-Mail Address Verified'),
+                    'data' => $this->getUserModel($user),
+                ]);
         }
 
         $validator = Validator::make($request->all(), [
@@ -222,10 +280,11 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()
-                ->route('admin.user.edit', ['user' => $user])
-                ->withInput()
-                ->withErrors($validator);
+            return response()
+                ->json([
+                    'success' => false,
+                    'errors' => $validator->errors()->getMessages(),
+                ]);
         }
 
         $data = $validator->validated();
@@ -244,14 +303,16 @@ class UserController extends Controller
 
         $user->forceFill($data)->save();
 
-        Flash::success(__('User :id Updated', ['id' => $user->id]));
-
         if ($user->id === $request->user()->id) {
             Auth::login($user, true);
         }
 
-        return redirect()
-            ->route('admin.user.edit', ['user' => $user]);
+        return response()
+            ->json([
+                'success' => true,
+                'flash' => __('User :id Updated', ['id' => $user->id]),
+                'data' => $this->getUserModel($user),
+            ]);
     }
 
     /**
@@ -267,7 +328,11 @@ class UserController extends Controller
         $user->delete();
 
         Flash::success(__('User Deleted'));
-        return redirect()
-            ->route('admin.user.index');
+
+        return response()
+            ->json([
+                'success' => true,
+                'redirect_to' => route('admin.user.index', [], false),
+            ]);
     }
 }
