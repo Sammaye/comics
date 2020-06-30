@@ -34,7 +34,6 @@ const app = new Vue({
     el: '#app'
 });
 
-
 $(window).on('resize scroll', function(e){
     var docH = parseInt($(document).height()),
         viewPortH = parseInt($(window).height());
@@ -46,18 +45,6 @@ $(window).on('resize scroll', function(e){
     }
 });
 $(window).trigger('resize');
-
-$(document).on('keypress', '.gridview thead input',  function(e){
-    if (e.which == 13) {
-        window.location = $(this).parents('tr').attr('data-action') + '?' + $(this).parents('tr').find('input').serialize();
-    }
-});
-
-$(document).on('change', '#scraper_user_agent_prefill', function(e){
-    if ($(this).val()) {
-        $('#scraper_user_agent').val($(this).val());
-    }
-});
 
 if ($('.alert-summarise').length > 0) {
     $('.alert-summarise').summarise();
@@ -152,41 +139,6 @@ $('.datepicker').datepicker({
 
 $('.datepicker').on('change', function(e){
     $(this).parents('form').submit();
-});
-
-$(document).on('click', '.container-comic-view .btn-subscribe', function(e){
-    e.preventDefault();
-
-    var btn = $(this),
-        otherBtn = $('.btn-unsubscribe');
-
-    $.post(btn.attr('href'), {}, null, 'json')
-    .done(function(data){
-        if(data.success){
-            btn.addClass('d-none');
-            otherBtn.removeClass('d-none');
-        }
-    });
-});
-
-$(document).on('click', '.container-comic-view .btn-unsubscribe', function(e){
-    e.preventDefault();
-
-    var btn = $(this),
-        otherBtn = $('.btn-subscribe');
-
-    $.post(btn.attr('href'), {}, null, 'json')
-    .done(function(data){
-        if(data.success){
-            btn.addClass('d-none');
-            otherBtn.removeClass('d-none');
-        }
-    });
-});
-
-$(document).on('click', '.container-user-edit .btn-unsubscribe', function(e){
-    e.preventDefault();
-    $(this).parents('li').remove();
 });
 
 $( '#sortable' ).sortable();

@@ -41,18 +41,11 @@
             @endif
         </div>
         <div class="col-md-10 col-md-push-2 col-sm-18 mb-4">
-            <a href="{{ route('comic.subscribe', ['comic' => $model]) }}"
-               class="btn btn-lg btn-outline-success btn-subscribe{{ $isSubscribed ? ' d-none' : '' }}"
-            >
-                <span class="fas fa-check ml-2"></span>
-                {{ __('Subscribe') }}
-            </a>
-            <a href="{{ route('comic.unsubscribe', ['comic' => $model]) }}"
-               class="btn btn-lg btn-outline-danger btn-unsubscribe{{ !$isSubscribed ? ' d-none' : '' }}"
-            >
-                <span class="fas fa-times ml-2"></span>
-                {{ __('Unsubscribe') }}
-            </a>
+            <comic-subscribe-button-component
+                subscribe-url="{{ route('comic.subscribe', ['comic' => $model]) }}"
+                unsubscribe-url="{{ route('comic.unsubscribe', ['comic' => $model]) }}"
+                :has-subscription="{{ $isSubscribed ? 'true' : 'false' }}"
+            ></comic-subscribe-button-component>
         </div>
     </div>
     <form method="get" action="{{ route('comic.view', ['comic' => $model])  }}" class="input-group input-group-lg mb-5">

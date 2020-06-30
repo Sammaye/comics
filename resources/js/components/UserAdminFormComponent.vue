@@ -220,7 +220,6 @@
                         </b-button>
                     </b-form-group>
                 </template>
-                <pre>{{form}}</pre>
             </b-col>
         </b-form>
     </div>

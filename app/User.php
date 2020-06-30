@@ -170,4 +170,19 @@ class User extends Authenticatable{
         }
         return false;
     }
+
+    public function currentComics() {
+        $subs = [];
+
+        foreach ($this->comics as $k => $comic) {
+            if ($comic = Comic::find($comic['comic_id'])) {
+                $subs[] = [
+                    'id' => $comic->id->__toString(),
+                    'title' => $comic->title
+                ];
+            }
+        }
+
+        return $subs;
+    }
 }

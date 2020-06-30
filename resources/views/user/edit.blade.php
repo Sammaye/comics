@@ -3,78 +3,18 @@
 @section('container', 'container-user-edit')
 @section('content')
 <div class="container py-4">
-    <form method="post" action="{{ route('user.update', ['user' => $model]) }}" class="row mb-4">
-        @method('PUT')
-        @csrf
-        <div class="col-sm-48">
-            <h2 class="mb-3">{{ __('Subscriptions') }}</h2>
-        </div>
-        <div class="col-sm-24">
-            <div class="form-group">
-                @if (count($model->comics) > 0)
-                    <p>{{ __(
-                        'Hold down (click or touch) on each row and move around to re-order your subscriptions'
-                    ) }}</p>
-                    <ul class="list-group" id="sortable">
-                        @foreach ($model->comics as $k => $comic)
-                            @if ($comic = \App\Comic::find($comic['comic_id']))
-                                <li class="list-group-item position-relative">
-                                    <span class="h5 d-block">{{ $comic->title }}</span>
-                                    <a href="#"
-                                       class="btn btn-outline-danger position-absolute btn-unsubscribe"
-                                    >
-                                        {{ __('Unsubscribe') }}
-                                    </a>
-                                    <input type="hidden" name="comic_subs[]" value="{{ $comic->id }}">
-                                </li>
-                            @endif
-                        @endforeach
-                    </ul>
-                    <span class="invalid-feedback{{ $errors->has('comic_subs') ? ' d-block mt-2' : '' }}"
-                          role="alert"
-                    >
-                        <strong>{{ $errors->first('comic_subs') }}</strong>
-                    </span>
-                @else
-                    <p>{{ __(
-                        'You are currently not subscribed to any comics, pick some and return here to be able to manage them'
-                    )  }}</p>
-                @endif
-            </div>
-        </div>
-        <div class="col-sm-24">
-            <div class="form-group">
-                <label for="email_frequency">{{ __('Email Frequency') }}</label>
-                <select id="email_frequency"
-                       type="text"
-                       class="form-control{{ $errors->has('email_frequency') ? ' is-invalid' : '' }}"
-                       name="email_frequency"
-                >
-                    @foreach($model->getEmailFrequencies() as $k => $v)
-                        <option value="{{ $k }}"{{ $model->email_frequency === $k ? ' selected' : '' }}>
-                            {{ $v }}
-                        </option>
-                    @endforeach
-                </select>
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $errors->first('email_frequency') }}</strong>
-                </span>
-            </div>
-        </div>
-        <div class="col">
-            <div class="row">
-                <div class="col-sm-48 text-center">
-                    <button type="submit"
-                            class="btn btn-lg btn-outline-success"
-                            name="action"
-                            value="update_subscriptions"
-                    >
-                        {{ __('Save Subscriptions') }}
-                    </button>
-                </div>
-            </div>
-        </div>
-    </form>
+    <user-subscriptions-settings-component
+        action="{{ route('user.update', ['user' => $model]) }}"
+        :comic-subscriptions="{{ json_encode($model->currentComics()) }}"
+        email-frequency="{{ $model->email_frequency }}"
+        :frequency-options="{{ json_encode(
+            collect($model->getEmailFrequencies())->map(function($item, $key){
+                return ['value' => $key, 'text' => $item];
+            })->toArray()
+        ) }}"
+        :errors="{{ json_encode($errors->getMessages(), JSON_FORCE_OBJECT) }}"
+    ></user-subscriptions-settings-component>
+
     <div class="row">
         <form method="post" action="{{ route('user.update', ['user' => $model]) }}" class="col-sm-24 pb-4">
             @method('PUT')
