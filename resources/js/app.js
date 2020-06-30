@@ -46,11 +46,6 @@ $(window).on('resize scroll', function(e){
 });
 $(window).trigger('resize');
 
-if ($('.alert-summarise').length > 0) {
-    $('.alert-summarise').summarise();
-    $('.alert-summarise').summarise('close');
-}
-
 $(document).on('keydown', function(e) {
     if ($(':focus').is('input, select, textarea')) {
         return;
@@ -74,6 +69,11 @@ $(document).on('keydown', function(e) {
     }
     e.preventDefault();
 });
+
+if ($('.alert-summarise').length > 0) {
+    $('.alert-summarise').summarise();
+    $('.alert-summarise').summarise('close');
+}
 
 $('#requestComicForm').on('submit', function(e){
     e.preventDefault();
@@ -140,6 +140,3 @@ $('.datepicker').datepicker({
 $('.datepicker').on('change', function(e){
     $(this).parents('form').submit();
 });
-
-$( '#sortable' ).sortable();
-$( '#sortable' ).disableSelection();
