@@ -14,7 +14,7 @@
                         <option value=""></option>
                         @foreach($comicSelectorOptions as $k => $v)
                             <option value="{{ $k }}"
-                                    data-url="{{ route('comic.view', ['comic' => $k]) }}"
+                                    data-url="{{ route('comic.view', ['comicId' => $k]) }}"
                                     {{ isset($selectedComicId) && $selectedComicId === $k ? ' selected' : '' }}
                             >
                                 {{ json_encode($v) }}
