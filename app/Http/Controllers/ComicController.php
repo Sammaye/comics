@@ -127,8 +127,7 @@ class ComicController extends Controller
             return response()
                 ->json([
                     'success' => false,
-                    'errors' => $validator->errors()->all(),
-                    'message' => __('Could not send your request because:'),
+                    'errors' => $validator->errors()->getMessages(),
                 ]);
         }
 

@@ -70,40 +70,6 @@ $(document).on('keydown', function(e) {
     e.preventDefault();
 });
 
-if ($('.alert-summarise').length > 0) {
-    $('.alert-summarise').summarise();
-    $('.alert-summarise').summarise('close');
-}
-
-$('#requestComicForm').on('submit', function(e){
-    e.preventDefault();
-
-    var modal = $(this).parents('.modal');
-
-    $.post($(this).attr('action'), $('#requestComicForm').serialize(), null, 'json')
-    .done(function(data){
-
-        modal.find('.alert-summarise').summarise(
-            'set',
-            data.success ? 'success' : 'error',
-            {
-                message: data.message,
-                list: data.errors
-            }
-        );
-
-        if (data.success) {
-            setTimeout(function () {
-                modal.modal('hide');
-            }, 3000);
-        }
-    });
-});
-
-$('#request-comic-modal').on('hidden.bs.modal', function () {
-    $(this).find('.alert-summarise').summarise('close');
-});
-
 $('#comicSelector').select2({
     width: '100%',
     placeholder: 'Select a Comic',
