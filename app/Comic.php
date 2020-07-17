@@ -494,14 +494,15 @@ class Comic extends Model
 
     /**
      * @param \App\ComicStrip $strip
-     * @param array           $data
+     * @param array $data
      *
+     * @param bool $scrape
      * @return \App\ComicStrip|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
      */
-    public function previous(ComicStrip $strip, array $data = [])
+    public function previous(ComicStrip $strip, array $data = [], $scrape = true)
     {
         if ($strip->previous) {
-            return $this->findStrip($strip->previous, $data);
+            return $this->findStrip($strip->previous, $data, $scrape);
         } elseif ($this->nav_previous_dom_path) {
             // Try and re-download and see if there is a previous now
             if (
@@ -510,7 +511,7 @@ class Comic extends Model
                 $strip->save()
             ) {
                 // If we have a previous now then let's get that
-                $strip = $this->findStrip($strip->previous, $data);
+                $strip = $this->findStrip($strip->previous, $data, $scrape);
                 return $strip;
             }
             return null;
@@ -533,7 +534,7 @@ class Comic extends Model
             return null;
         }
 
-        $strip = $this->findStrip($this->index($previousIndex), $data);
+        $strip = $this->findStrip($this->index($previousIndex), $data, $scrape);
 
         if (!$strip) {
             // As a last resort, to try and compensate for
@@ -550,7 +551,7 @@ class Comic extends Model
     public function next(ComicStrip $strip, $scrape = false, array $data = [])
     {
         if ($strip->next) {
-            return $this->findStrip($strip->next, $data);
+            return $this->findStrip($strip->next, $data, $scrape);
         } elseif ($this->nav_next_dom_path) {
             if (
                 $scrape &&
@@ -582,7 +583,7 @@ class Comic extends Model
             return null;
         }
 
-        $strip = $this->findStrip($this->index($nextIndex), $data);
+        $strip = $this->findStrip($this->index($nextIndex), $data, $scrape);
 
         if (!$strip) {
             // As a last resort, to try and compensate for

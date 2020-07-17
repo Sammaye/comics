@@ -13,6 +13,25 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::prefix(config('app.base_url'))->group(function () {
+
+    Route::prefix('comic')->name('comic.')->group(function () {
+        Route::get('get-names', 'ApiComicController@getNames')
+            ->name('getNames');
+
+        Route::get('get/{comicId?}/{index?}', 'ApiComicController@get')
+            ->name('get');
+
+        Route::post('{comic}/subscribe', 'ApiComicController@subscribe')
+            ->name('subscribe')
+            ->middleware('auth:api');
+        Route::post('{comic}/unsubscribe', 'ApiComicController@unsubscribe')
+            ->name('unsubscribe')
+            ->middleware('auth:api');
+    });
+
+    Route::middleware('auth:api')->get('/user', function (Request $request) {
+        return $request->user();
+    });
+
 });

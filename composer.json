@@ -27,6 +27,7 @@
         "jenssegers/mongodb": "3.6.0",
         "jenssegers/mongodb-session": "^1.2.5",
         "laravel/framework": "~6.0",
+        "laravel/passport": "^9.3",
         "laravel/socialite": "^4.1",
         "laravel/tinker": "^1.0",
         "sammaye/laravel-flash": "dev-master",
