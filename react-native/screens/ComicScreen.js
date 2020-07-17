@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     paddingBottom: 5,
   },
-  notFound: {
+  noImage: {
     textAlign: 'center',
     padding: 20,
     borderWidth: 1,
@@ -125,13 +125,13 @@ const ComicScreen = function({navigation, route}) {
         {
           !comic.isFetching &&
           !comic.strip &&
-          <Text style={[Style.a, styles.notFound]}>
+          <Text style={[Style.a, styles.noImage]}>
             No strip found
           </Text>
         }
         {
           comic.strip && comic.strip.skip > 0 &&
-          <Text style={Style.a} onPress={() => Linking.openURL(comic.strip.url)}>
+          <Text style={[Style.a, styles.noImage]} onPress={() => Linking.openURL(comic.strip.url)}>
             This strip is not compatible with this site but you can click here to view it on their site
           </Text>
         }
