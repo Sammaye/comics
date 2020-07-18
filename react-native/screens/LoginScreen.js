@@ -5,7 +5,7 @@ import Style from "../Style";
 import {useDispatch, useSelector} from "react-redux";
 import {login} from "../redux/actions";
 
-const LoginScreen = function() {
+const LoginScreen = function({navigation, route}) {
   const dispatch = useDispatch();
   const [username, onChangeUsernameText] = useState('');
   const [password, onChangePasswordText] = useState('');
@@ -13,7 +13,7 @@ const LoginScreen = function() {
   const loginErrors = useSelector(state => state.auth.errors);
 
   const submit = function() {
-    dispatch(login(username, password));
+    dispatch(login(username, password)).then(() => navigation.navigate('Home'));
   }
 
   return (

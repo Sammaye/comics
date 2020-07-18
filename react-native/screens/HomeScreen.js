@@ -5,17 +5,21 @@ import {SafeAreaView} from "react-native-safe-area-context";
 import Style from "../Style";
 import {user} from "../redux/actions";
 
-const HomeScreen = function () {
+const HomeScreen = function ({navigation, route}) {
   const dispatch = useDispatch();
 
   const auth = useSelector(state => state.auth);
   const userData = useSelector(state => state.user);
 
   useEffect(() => {
-    if (auth.isAuthed) {
-      dispatch(user(auth.token));
-    }
-  }, [auth]);
+    const userEvent = navigation.addListener('focus', () => {
+      if (auth.isAuthed) {
+        dispatch(user(auth.token));
+      }
+    });
+
+    return userEvent;
+  }, [auth, navigation]);
 
   return (
     <SafeAreaView>

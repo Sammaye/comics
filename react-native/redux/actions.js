@@ -70,7 +70,6 @@ export function logout(token) {
   return dispatch => {
     dispatch(requestLogout())
 
-    console.log(`${API_BASE_URL}logout`);
     return axios.post(`${API_BASE_URL}logout`, {}, {
       headers: {
         Authorization: `Bearer ${token}`,

@@ -44,7 +44,7 @@ const AppNavigator = function () {
             name={comic._id}
             key={comic._id}
             component={ComicScreen}
-            initialParams={comic}
+            initialParams={{_id: comic._id, comicIndex: comic.index}}
             options={{title: comic.title}}
           />
         ))}

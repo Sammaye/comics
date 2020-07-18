@@ -37,7 +37,7 @@ const ComicScreen = function({navigation, route}) {
   const dispatch = useDispatch();
 
   const [_id, set_id] = useState(route.params?._id);
-  const [index, setIndex] = useState(route.params?.index);
+  const [index, setIndex] = useState(route.params?.comicIndex);
   const comic = useSelector(state => state.comic);
 
   useEffect(() => {
