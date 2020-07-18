@@ -66,7 +66,7 @@ const ComicScreen = function({navigation, route}) {
 
   return (
     <SafeAreaView>
-      <ScrollView contentContainerStyle={Style.comicPage} contentInsetAdjustmentBehavior="automatic">
+      <ScrollView contentContainerStyle={Style.screen} contentInsetAdjustmentBehavior="automatic">
         <Text style={Style.h1}>{comic.title}</Text>
         <View style={styles.authorRow}>
           {

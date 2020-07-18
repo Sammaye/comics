@@ -4,7 +4,7 @@ const Style = StyleSheet.create({
   page: {
     flexGrow: 1,
   },
-  comicPage: {
+  screen: {
     flexGrow: 1,
     padding: 10,
   },
@@ -14,6 +14,27 @@ const Style = StyleSheet.create({
   h1: {
     fontSize: 20,
   },
+  formSummaryContainer: {
+    marginBottom: 15,
+  },
+  formSummaryLine: {
+    marginBottom: 5,
+  },
+  formError : {
+    color: 'red',
+  },
+  formGroup: {
+    marginBottom: 15,
+  },
+  label: {
+    marginBottom: 5,
+  },
+  textInput: {
+    borderWidth: 1,
+    borderColor: '#ced4da',
+    borderRadius: 3,
+    padding: 2,
+  }
 });
 
 export default Style;

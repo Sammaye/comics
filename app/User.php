@@ -7,13 +7,15 @@ use Carbon\Carbon;
 use Jenssegers\Mongodb\Auth\User as Authenticatable;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\UTCDateTime;
 use sammaye\Permission\Traits\HasPermissions;
 
-class User extends Authenticatable{
+class User extends Authenticatable
+{
 
-    use HasObjectId, MustVerifyEmail, Notifiable, HasPermissions;
+    use HasObjectId, MustVerifyEmail, Notifiable, HasPermissions, HasApiTokens;
 
     protected $collection = 'user';
 
@@ -101,7 +103,7 @@ class User extends Authenticatable{
     {
         $comics = is_array($this->comics) ? $this->comics : [];
         foreach ($comics as $comic) {
-            if ((String)$comic['comic_id'] === (String)$id) {
+            if ((string)$comic['comic_id'] === (string)$id) {
                 return true;
             }
         }
@@ -120,7 +122,7 @@ class User extends Authenticatable{
     {
         $comics = is_array($this->comics) ? $this->comics : [];
         foreach ($comics as $k => $comic) {
-            if ((String)$comic['comic_id'] === (String)$id) {
+            if ((string)$comic['comic_id'] === (string)$id) {
                 unset($comics[$k]);
             }
         }
@@ -142,7 +144,7 @@ class User extends Authenticatable{
         if (is_array($subs) && count($subs) > 0) {
             foreach ($currentSubs as $k => $sub) {
                 foreach ($subs as $sk => $subKey) {
-                    if ($subKey === (String)$sub['comic_id']) {
+                    if ($subKey === (string)$sub['comic_id']) {
                         $newSubs[$sk] = $sub;
                     }
                 }
@@ -156,7 +158,7 @@ class User extends Authenticatable{
     public function hasComic($id)
     {
         if ($id instanceof ObjectID) {
-            $id = (String)$id;
+            $id = (string)$id;
         }
 
         if (!is_array($this->comics)) {
@@ -164,7 +166,7 @@ class User extends Authenticatable{
         }
 
         foreach ($this->comics as $comic) {
-            if ((String)$comic['comic_id'] === $id) {
+            if ((string)$comic['comic_id'] === $id) {
                 return true;
             }
         }

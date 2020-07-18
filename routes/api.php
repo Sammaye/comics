@@ -30,8 +30,12 @@ Route::prefix(config('app.base_url'))->group(function () {
             ->middleware('auth:api');
     });
 
-    Route::middleware('auth:api')->get('/user', function (Request $request) {
-        return $request->user();
+    Route::middleware('auth:api')->group(function () {
+        Route::get('user', 'ApiUserController@user');
+
+        Route::post('logout', 'ApiUserController@logout');
     });
+
+    //Route::middleware('auth:api')->get('/user', 'ApiUserController@user');
 
 });

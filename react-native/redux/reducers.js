@@ -1,8 +1,12 @@
 import { combineReducers } from 'redux';
 
 import {
-  LOGIN,
-  LOGOUT,
+  REQUEST_LOGIN,
+  RECEIVE_LOGIN,
+  REQUEST_LOGOUT,
+  RECEIVE_LOGOUT,
+  REQUEST_USER,
+  RECEIVE_USER,
   ADD_COMIC,
   REMOVE_COMIC,
   UPDATE_ACCOUNT,
@@ -12,11 +16,19 @@ import {
   RECEIVE_COMIC,
 } from './actions';
 
-let initialUserState = {
+let initialAuthState = {
+  isFetching: false,
+  didInvalidate: false,
   token: null,
-  email: null,
+  username: null,
   isAuthed: false,
-  subscriptions: {},
+  errors: [
+  ],
+};
+
+let initialUserState = {
+  isFetching: false,
+  didInvalidate: false,
 };
 
 let initialComicsState = {
@@ -33,25 +45,51 @@ let initialComicsState = {
 
 let initialComicState = {};
 
+function auth(state = initialAuthState, action) {
+  switch(action.type) {
+    case REQUEST_LOGIN:
+      return {
+        ...initialAuthState,
+        isFetching: true,
+        didInvalidate: false,
+      };
+    case RECEIVE_LOGIN:
+      return {
+        ...state,
+        isFetching: false,
+        didInvalidate: false,
+        token: action.token,
+        username: action.username,
+        errors: action.token ? [] : action.errors,
+        isAuthed: action.token ? true : false,
+      };
+    case REQUEST_LOGOUT:
+      return {
+        ...state,
+        isFetching: true,
+      };
+    case RECEIVE_LOGOUT:
+      return initialAuthState;
+    default:
+      return state;
+  }
+}
+
 function user(state = initialUserState, action) {
   switch(action.type) {
-    case LOGIN:
+    case REQUEST_USER:
+      return {
+        ...initialUserState,
+        isFetching: true,
+        didInvalidate: false,
+      };
+    case RECEIVE_USER:
       return {
         ...state,
-        token: 'testtoken',
-        email: 'test@test.com',
-        isAuthed: true,
+        isFetching: false,
+        didInvalidate: false,
+        ...action.user
       };
-    case LOGOUT:
-      return {
-        ...state,
-        token: null,
-        email: null,
-        isAuthed: false,
-      };
-    case UPDATE_ACCOUNT:
-    case ADD_COMIC:
-    case REMOVE_COMIC:
     default:
       return state;
   }
@@ -98,6 +136,6 @@ function comic(state = initialComicState, action) {
   }
 }
 
-const rootReducer = combineReducers({user, comics, comic});
+const rootReducer = combineReducers({auth, user, comics, comic});
 
 export default rootReducer;

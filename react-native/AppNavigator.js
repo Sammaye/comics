@@ -8,6 +8,7 @@ import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import AccountScreen from "./screens/AccountScreen";
 import ComicScreen from "./screens/ComicScreen";
+import LogoutScreen from "./screens/LogoutScreen";
 
 import {fetchComics} from "./redux/actions";
 
@@ -20,7 +21,7 @@ const AppNavigator = function () {
     dispatch(fetchComics());
   }, []);
 
-  const isAuthed = useSelector(state => state.user.isAuthed);
+  const isAuthed = useSelector(state => state.auth.isAuthed);
   const comics = useSelector(state => state.comics.comics);
 
   return (
@@ -34,7 +35,7 @@ const AppNavigator = function () {
         {isAuthed && (
           <>
             <Drawer.Screen name="Account" component={AccountScreen}/>
-            <Drawer.Screen name="Logout" component={AccountScreen}/>
+            <Drawer.Screen name="Logout" component={LogoutScreen}/>
           </>
         )}
 
