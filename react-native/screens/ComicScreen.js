@@ -41,8 +41,16 @@ const ComicScreen = function({navigation, route}) {
   const comic = useSelector(state => state.comic);
 
   useEffect(() => {
+    const fetchComicEvent = navigation.addListener('focus', () => {
+      // Double trouble! We do this due to React navigation caches views
+      // this ensures we always reload the comic when we return to it form another
+      dispatch(fetchComic(_id, index));
+    });
+
     dispatch(fetchComic(_id, index));
-  }, [_id, index]);
+
+    return fetchComicEvent;
+  }, [_id, index, navigation]);
 
   const requestIndex = function(index) {
     // What a dumbass problem, I am forced to do this because some weird
