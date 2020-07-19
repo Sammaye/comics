@@ -7,21 +7,24 @@ import {
   RECEIVE_LOGOUT,
   REQUEST_USER,
   RECEIVE_USER,
-  ADD_COMIC,
-  REMOVE_COMIC,
-  UPDATE_ACCOUNT,
   REQUEST_COMICS,
   RECEIVE_COMICS,
   REQUEST_COMIC,
   RECEIVE_COMIC,
+  REQUEST_SUBSCRIPTIONS,
+  RECEIVE_SUBSCRIPTIONS,
+  REQUEST_ADD_SUBSCRIPTION,
+  RECEIVE_ADD_SUBSCRIPTION,
+  REQUEST_REMOVE_SUBSCRIPTION,
+  RECEIVE_REMOVE_SUBSCRIPTION,
 } from './actions';
 
 let initialAuthState = {
-  isFetching: false,
+  isFetching: true,
   didInvalidate: false,
-  token: null,
-  username: null,
-  isAuthed: false,
+  token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI1ZjEyZWFiNjMyMmYwMTY5MjMyMTk3MjIiLCJqdGkiOiJiMmZmODJiNTdlMGEzMTcwYTA0MWZlNDUyNzY1MzE2ZDMyM2IzZDg4N2FiMTI3NmNmZDQ2MzdkODFiZGU3NzdiNzUwMGQ1MzJjZWJhM2E3NSIsImlhdCI6MTU5NTE0ODE2MywibmJmIjoxNTk1MTQ4MTYzLCJleHAiOjE2MjY2ODQxNjMsInN1YiI6IjVlZDQxMmY0NDRkMTA0MjA1NTc3ZmI0MyIsInNjb3BlcyI6WyIqIl19.fmzqxPchDMfYqCBpvhk6k6mZpt3dmUb_eaQ7nz75fftyXR3lLyHUcUU6aIa9GB4mZM2o0pIyUe2qPPQQi5kVieHpuC9hObch9CqAihbFhAwX6hw359vdPAHnhrjqcCMehb8BtOwEd1tqOJ0-pqu5mXilK-h-j08drpVjB9JgCnJ9TFse4LWEiKnorW4UtSy4WFIIp_YEJXB2nGiXWbSsQxzYA_tfRM_YfpZ0QCF4-oln7Him4IGgzkyhEg9wjiXoukVnG0zjm98JqRv-PeEvKNOV-c9H0dknYiDQOxQqOWg-khwfo88vw9eCsX1uFaOuX3AT-Sou6FihwOwyOYh-BPyDJHXMFYf4Lp8xlbC9wj88maK-X4FacdxJHRU2KOfI4MNmc0QUoiO4W_1QGyfznv4d-59BZwuxypBgAwvxmrsco-tU495lVdY5T8cBqZtXVqn3wqwtUF-FzXglNResbNZbLJYR6qXUuEuUTzjCy4bKX8WNYkcG0-AT5pqM_--8sQYs4OsXVXjdOQnrUsbnAyw7jGsrXzqo6xIrIODOQf7NdpaLerwZtBvke6yugzufw7hZneAcOb6wjM9-cWDs5oQv8USPmyNYU-iHcsY706kZrW4gCBdrj_7O2S2-J8eE9Kd0znY8xtBeBpzg6otDufwGEKRPs6VGqcSfk2GlDog",
+  username: "sam.millman@gmail.com",
+  isAuthed: true,
   errors: [
   ],
 };
@@ -43,7 +46,28 @@ let initialComicsState = {
   ],
 };
 
-let initialComicState = {};
+let initialComicState = {
+  isFetching: false,
+  didInvalidate: false,
+};
+
+let initialSubscriptionsState = {
+  isFetching: false,
+  didInvalidate: false,
+  subscriptions: [],
+};
+
+let initialAddSubscriptionState = {
+  isFetching: false,
+  didInvalidate: false,
+  comic_id: null,
+  success: false,
+};
+
+let initialRemoveSubscriptionState = {
+  isFetching: false,
+  didInvalidate: false,
+};
 
 function auth(state = initialAuthState, action) {
   switch(action.type) {
@@ -136,6 +160,59 @@ function comic(state = initialComicState, action) {
   }
 }
 
-const rootReducer = combineReducers({auth, user, comics, comic});
+function subscriptions(state = initialSubscriptionsState, action) {
+  switch(action.type) {
+    case REQUEST_SUBSCRIPTIONS:
+      return {
+        ...initialSubscriptionsState,
+        isFetching: true,
+      };
+    case RECEIVE_SUBSCRIPTIONS:
+      return {
+        ...initialSubscriptionsState,
+        subscriptions: action.subscriptions,
+      };
+    default:
+      return state;
+  }
+}
+
+function addSubscription(state = initialAddSubscriptionState, action) {
+  switch(action.type) {
+    case REQUEST_ADD_SUBSCRIPTION:
+      return {
+        ...initialAddSubscriptionState,
+        isFetching: true,
+      };
+    case RECEIVE_ADD_SUBSCRIPTION:
+      return {
+        ...initialAddSubscriptionState,
+        comic_id: action.comic_id,
+        success: action.success,
+      };
+    default:
+      return state;
+  }
+}
+
+function removeSubscription(state = initialRemoveSubscriptionState, action) {
+  switch(action.type) {
+    case REQUEST_REMOVE_SUBSCRIPTION:
+      return {
+        ...initialRemoveSubscriptionState,
+        isFetching: true,
+      };
+    case RECEIVE_REMOVE_SUBSCRIPTION:
+      return {
+        ...initialRemoveSubscriptionState,
+        comic_id: action.comic_id,
+        success: action.success,
+      };
+    default:
+      return state;
+  }
+}
+
+const rootReducer = combineReducers({auth, user, comics, comic, subscriptions, addSubscription, removeSubscription});
 
 export default rootReducer;

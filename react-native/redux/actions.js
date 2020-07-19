@@ -10,17 +10,20 @@ export const REQUEST_LOGOUT = 'REQUEST_LOGOUT';
 export const RECEIVE_LOGOUT = 'RECEIVE_LOGOUT';
 export const REQUEST_USER = 'REQUEST_USER';
 export const RECEIVE_USER = 'RECEIVE_USER';
-export const ADD_COMIC = 'ADD_COMIC';
-export const REMOVE_COMIC = 'REMOVE_COMIC';
-export const UPDATE_ACCOUNT = 'UPDATE_ACCOUNT';
 export const REQUEST_COMICS = 'REQUEST_COMICS';
 export const RECEIVE_COMICS = 'RECEIVE_COMICS';
 export const REQUEST_COMIC = 'REQUEST_COMIC';
 export const RECEIVE_COMIC = 'RECEIVE_COMIC';
+export const REQUEST_SUBSCRIPTIONS = 'REQUEST_SUBSCRIPTIONS';
+export const RECEIVE_SUBSCRIPTIONS = 'RECEIVE_SUBSCRIPTIONS';
+export const REQUEST_ADD_SUBSCRIPTION = 'REQUEST_ADD_SUBSCRIPTION';
+export const RECEIVE_ADD_SUBSCRIPTION = 'RECEIVE_ADD_SUBSCRIPTION';
+export const REQUEST_REMOVE_SUBSCRIPTION = 'REQUEST_REMOVE_SUBSCRIPTION';
+export const RECEIVE_REMOVE_SUBSCRIPTION = 'RECEIVE_REMOVE_SUBSCRIPTION';
 
 export function requestLogin(username, password) {
   return {
-    type:  REQUEST_LOGIN,
+    type: REQUEST_LOGIN,
     username,
     password,
   };
@@ -111,28 +114,20 @@ export function receiveUser(user) {
   };
 }
 
-export function addComic() {
-  return {
-    type: ADD_COMIC,
-  };
-}
-
-export function removeComic() {
-  return {
-    type: REMOVE_COMIC,
-  };
-}
-
-export function updateAccount() {
-  return {
-    type: UPDATE_ACCOUNT,
-  };
-}
-
 export function requestComics() {
   return {
     type: REQUEST_COMICS,
   };
+}
+
+export function fetchComics() {
+  return dispatch => {
+    dispatch(requestComics());
+
+    return axios.get(`${API_BASE_URL}comic/get-names`)
+      .then(response => response.data)
+      .then(json => dispatch(receiveComics(json.comics)));
+  }
 }
 
 export function receiveComics(comics) {
@@ -150,24 +145,6 @@ export function requestComic(comic_id) {
   };
 }
 
-export function receiveComic(comic) {
-  return {
-    type: RECEIVE_COMIC,
-    comic,
-    receivedAt: Date.now(),
-  };
-}
-
-export function fetchComics() {
-  return dispatch => {
-    dispatch(requestComics());
-
-    return axios.get(`${API_BASE_URL}comic/get-names`)
-      .then(response => response.data)
-      .then(json => dispatch(receiveComics(json.comics)));
-  }
-}
-
 export function fetchComic(comic_id, index) {
   return dispatch => {
     dispatch(requestComic(comic_id))
@@ -181,4 +158,95 @@ export function fetchComic(comic_id, index) {
       .then(response => response.data)
       .then(json => dispatch(receiveComic(json.comic)));
   }
+}
+
+export function receiveComic(comic) {
+  return {
+    type: RECEIVE_COMIC,
+    comic,
+    receivedAt: Date.now(),
+  };
+}
+
+export function requestSubscriptions() {
+  return {
+    type: REQUEST_SUBSCRIPTIONS,
+  };
+}
+
+export function fetchSubscriptions(token, search) {
+  return dispatch => {
+    dispatch(requestSubscriptions());
+
+    return axios.get(`${API_BASE_URL}subscriptions`, {
+      params: {
+        search
+      },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    })
+      .then(response => dispatch(receiveSubscriptions(response.data.subscriptions)));
+  }
+}
+
+export function receiveSubscriptions(subscriptions) {
+  return {
+    type: RECEIVE_SUBSCRIPTIONS,
+    subscriptions,
+  };
+}
+
+export function requestAddSubscription() {
+  return {
+    type: REQUEST_ADD_SUBSCRIPTION,
+  };
+}
+
+export function addSubscription(token, comic_id) {
+  return dispatch => {
+    dispatch(requestAddSubscription());
+
+    return axios.post(`${API_BASE_URL}comic/${comic_id}/subscribe`, {}, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    })
+      .then(response => dispatch(receiveAddSubscription(response.data)));
+  }
+}
+
+export function receiveAddSubscription(response) {
+  return {
+    type: RECEIVE_ADD_SUBSCRIPTION,
+    comic_id:  response.comic_id,
+    success: response.success,
+  };
+}
+
+export function requestRemoveSubscription() {
+  return {
+    type: REQUEST_REMOVE_SUBSCRIPTION,
+  };
+}
+
+export function removeSubscription(token, comic_id) {
+  return dispatch => {
+    dispatch(requestRemoveSubscription());
+
+    return axios.post(`${API_BASE_URL}comic/${comic_id}/unsubscribe`, {}, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    })
+      .then(response => dispatch(receiveRemoveSubscription(response.data)));
+  }
+}
+
+export function receiveRemoveSubscription(response) {
+  return {
+    type: RECEIVE_REMOVE_SUBSCRIPTION,
+    comic_id: response.comic_id,
+    success: response.success,
+  };
 }

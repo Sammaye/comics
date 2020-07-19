@@ -94,8 +94,6 @@ class ApiComicController extends Controller
             $next = $comic->next($current, false);
         }
 
-        $is_subscribed = $request->user() && $request->user()->hasComic($comic->_id);
-
         $comic_a = $comic->toArray();
 
         $comic_a['current_index'] = $comic->current_index instanceof Carbon
@@ -169,24 +167,51 @@ class ApiComicController extends Controller
                         'url' => $previous->url,
                         'img_src' => $previous->img_src,
                     ] : null,
-                    'is_subscribed' => $is_subscribed,
                 ]),
             ]);
     }
 
-    public function subscribe(Request $request)
+    public function subscribe(Request $request, Comic $comic)
     {
+        if ($request->user()->addComic($comic->_id)) {
+            return response()
+                ->json([
+                    'success' => true,
+                    'comic_id' => $comic->_id->__toString(),
+                    'message' => __(
+                        'You subscribed to :title',
+                        ['title' => $comic->title]
+                    ),
+                ]);
+        }
+
         return response()
             ->json([
-                'success' => true,
+                'success' => false,
+                'comic_id' => $comic->_id->__toString(),
+                'message' => __('Unknown Error'),
             ]);
     }
 
-    public function unsubscribe(Request $request)
+    public function unsubscribe(Request $request, Comic $comic)
     {
+        if ($request->user()->removeComic($comic->_id)) {
+            return response()
+                ->json([
+                    'success' => true,
+                    'comic_id' => $comic->_id->__toString(),
+                    'message' => __(
+                        'You unsubscribed from :title',
+                        ['title' => $comic->title]
+                    ),
+                ]);
+        }
+
         return response()
             ->json([
-                'success' => true,
+                'success' => false,
+                'comic_id' => $comic->_id->__toString(),
+                'message' => __('Unknown Error'),
             ]);
     }
 }
