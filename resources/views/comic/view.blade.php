@@ -55,7 +55,7 @@
             </a>
         </div>
     </div>
-    <form method="get" action="{{ route('comic.view', ['comic' => $model])  }}" class="input-group input-group-lg mb-5">
+    <form method="get" action="{{ route('comic.view', ['comicId' => $model->_id->__toString()])  }}" class="input-group input-group-lg mb-5">
         <div class="input-group-prepend">
             @if($previousStrip)
                 <a href="{{ $model->indexUrl($previousStrip->index) }}"

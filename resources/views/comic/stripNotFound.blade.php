@@ -4,7 +4,7 @@
 <div class="container my-5">
     <div class="row">
         <div class="col">
-            <form method="get" action="{{ route('comic.view', ['comic' => $model])  }}" class="input-group input-group-lg mb-5">
+            <form method="get" action="{{ route('comic.view', ['comicId' => $model->_id->__toString()])  }}" class="input-group input-group-lg mb-5">
                 <div class="input-group-prepend">
                     @if($model->current_index)
                         <a href="{{ $model->indexUrl($model->current_index) }}"
@@ -32,7 +32,7 @@
             <p class="lead text-center">{!! __(
                 'You can <a :backlink>go back to one that does exist</a> or if you believe this is an error and this strip should be here <a :helplink>then please contact me through the help section</a>.',
                 [
-                    'backlink' => 'href="' . route('comic.view', ['comic' => $model]) . '"',
+                    'backlink' => 'href="' . route('comic.view', ['comicId' => $model->_id->__toString()]) . '"',
                     'helplink' => 'href="' . route('help', ['#need-help-support']) . '"'
                 ]
             )  !!}</p>

@@ -303,7 +303,7 @@ class Comic extends Model
         return route(
             'comic.view',
             [
-                'comic' => $this,
+                'comicId' => $this->_id->__toString(),
                 'index' => $this->type === self::TYPE_DATE
                     ? $index->format(config('app.inputDateFormat'))
                     : $index
