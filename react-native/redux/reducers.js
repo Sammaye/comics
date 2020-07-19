@@ -13,6 +13,8 @@ import {
   RECEIVE_COMIC,
   REQUEST_SUBSCRIPTIONS,
   RECEIVE_SUBSCRIPTIONS,
+  ADD_SUBSCRIPTIONS_SUBSCRIPTION,
+  REMOVE_SUBSCRIPTIONS_SUBSCRIPTION,
   REQUEST_ADD_SUBSCRIPTION,
   RECEIVE_ADD_SUBSCRIPTION,
   REQUEST_REMOVE_SUBSCRIPTION,
@@ -161,6 +163,8 @@ function comic(state = initialComicState, action) {
 }
 
 function subscriptions(state = initialSubscriptionsState, action) {
+  const newSubscriptions = state.subscriptions;
+
   switch(action.type) {
     case REQUEST_SUBSCRIPTIONS:
       return {
@@ -172,6 +176,34 @@ function subscriptions(state = initialSubscriptionsState, action) {
         ...initialSubscriptionsState,
         subscriptions: action.subscriptions,
       };
+    case ADD_SUBSCRIPTIONS_SUBSCRIPTION:
+      newSubscriptions.forEach((value, index, array) => {
+        if (value._id === action.comic_id) {
+          value.subscribed = true;
+          value.subscribed_date = Date.now();
+
+          newSubscriptions[index] = value;
+        }
+      });
+
+      return {
+        ...state,
+        subscriptions: newSubscriptions,
+      }
+    case REMOVE_SUBSCRIPTIONS_SUBSCRIPTION:
+      newSubscriptions.forEach((value, index, array) => {
+        if (value._id === action.comic_id) {
+          value.subscribed = false;
+          value.subscribed_date = null;
+
+          newSubscriptions[index] = value;
+        }
+      });
+
+      return {
+        ...state,
+        subscriptions: newSubscriptions,
+      }
     default:
       return state;
   }

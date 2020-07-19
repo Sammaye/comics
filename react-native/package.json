@@ -15,10 +15,12 @@
     "@react-navigation/drawer": "^5.8.5",
     "@react-navigation/native": "^5.7.0",
     "@react-navigation/stack": "^5.7.0",
+    "awesome-debounce-promise": "^2.1.0",
     "axios": "^0.19.2",
     "hoist-non-react-statics": "^3.3.2",
     "querystring": "^0.2.0",
     "react": "16.11.0",
+    "react-async-hook": "^3.6.1",
     "react-native": "0.62.2",
     "react-native-dotenv": "^2.2.0",
     "react-native-gesture-handler": "^1.6.1",
@@ -28,7 +30,8 @@
     "react-redux": "^7.2.0",
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "use-constant": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "7.10.4",

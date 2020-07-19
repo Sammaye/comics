@@ -1,7 +1,7 @@
 import axios from 'axios';
 import qs from 'querystring';
 
-const BASE_URL = 'http://172.24.176.1:8000/';
+const BASE_URL = 'http://172.21.160.1:8000/';
 const API_BASE_URL = `${BASE_URL}api/`;
 
 export const REQUEST_LOGIN = 'REQUEST_LOGIN';
@@ -16,6 +16,8 @@ export const REQUEST_COMIC = 'REQUEST_COMIC';
 export const RECEIVE_COMIC = 'RECEIVE_COMIC';
 export const REQUEST_SUBSCRIPTIONS = 'REQUEST_SUBSCRIPTIONS';
 export const RECEIVE_SUBSCRIPTIONS = 'RECEIVE_SUBSCRIPTIONS';
+export const ADD_SUBSCRIPTIONS_SUBSCRIPTION = 'ADD_SUBSCRIPTIONS_SUBSCRIPTION';
+export const REMOVE_SUBSCRIPTIONS_SUBSCRIPTION = 'REMOVE_SUBSCRIPTIONS_SUBSCRIPTION';
 export const REQUEST_ADD_SUBSCRIPTION = 'REQUEST_ADD_SUBSCRIPTION';
 export const RECEIVE_ADD_SUBSCRIPTION = 'RECEIVE_ADD_SUBSCRIPTION';
 export const REQUEST_REMOVE_SUBSCRIPTION = 'REQUEST_REMOVE_SUBSCRIPTION';
@@ -248,5 +250,19 @@ export function receiveRemoveSubscription(response) {
     type: RECEIVE_REMOVE_SUBSCRIPTION,
     comic_id: response.comic_id,
     success: response.success,
+  };
+}
+
+export function addSubscriptionsSubscription(comic_id) {
+  return {
+    type: ADD_SUBSCRIPTIONS_SUBSCRIPTION,
+    comic_id,
+  }
+}
+
+export function removeSubscriptionsSubscription(comic_id) {
+  return {
+    type: REMOVE_SUBSCRIPTIONS_SUBSCRIPTION,
+    comic_id,
   };
 }
