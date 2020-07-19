@@ -42,34 +42,30 @@ const SubscriptionScreen = function ({route, navigation}) {
   const auth = useSelector(state => state.auth);
   const subscriptions = useSelector(state => state.subscriptions);
 
-  const [textSearch, onChangeTestSearchText] = useState('');
-
-  useEffect(() => {
-    const listEvent = navigation.addListener('focus', () => {
-      dispatch(fetchSubscriptions(auth.token, textSearch));
-    });
-
-    return listEvent;
-  }, [navigation]);
-
   // This is a bit dodgy, it works, but it will not cancel previous actions in process
   // which means if it detects two fires it will run two fires even if another fire has
   // taken over the old one it will just receive them in order, it might be that using hooks
   // with additional plugins will help, but I wanted to avoid too much bloat here
+  // THIS IS OLD CODE LEFT HERE FOR REFERENCE
   //const searchSubscriptions = text => dispatch(fetchSubscriptions(auth.token, text));
   //const searchSubscriptionsDebounced = AwesomeDebouncePromise(searchSubscriptions, 500);
   //useEffect(() => {searchSubscriptionsDebounced(textSearch)}, [textSearch]);
 
-  const useSearchSubscriptions = () => {
+  const useDebouncedSearch = (searchFunction) => {
     // Handle the input text state
     const [textSearch, onChangeTestSearchText] = useState('');
 
     // Debounce the original search async function
-    const debouncedSearchSubscriptions = useConstant(() =>
-      AwesomeDebouncePromise(searchStarwarsHero, 300)
+    const debouncedSearchFunction = useConstant(() =>
+      AwesomeDebouncePromise(searchFunction, 300)
     );
 
-    const search = useAsync(debouncedSearchSubscriptions,[textSearch]);
+    const search = useAsync(
+      async () => {
+        return debouncedSearchFunction(textSearch);
+      },
+      [textSearch]
+    );
 
     // Return everything needed for the hook consumer
     return {
@@ -78,11 +74,19 @@ const SubscriptionScreen = function ({route, navigation}) {
       search,
     };
   };
-/*
-  const {textSearch, onChangeTestSearchText, searchResults} = () => {
-    //useSearchSubscriptions(text => )
-  }
-*/
+  const useSearchSubscriptions = () => useDebouncedSearch(text => dispatch(fetchSubscriptions(auth.token, text)));
+
+  const {textSearch, onChangeTestSearchText, searchResults} = useSearchSubscriptions();
+
+  useEffect(() => {
+    const listEvent = navigation.addListener('focus', () => {
+      // I'm leaving this out for the minute, it is ok since it doesn't break UX
+      //dispatch(fetchSubscriptions(auth.token));
+    });
+
+    return listEvent;
+  }, [navigation]);
+
   const addSubscriptionEvent = comic_id => {
     dispatch(addSubscription(auth.token, comic_id))
       .then(response => dispatch(addSubscriptionsSubscription(comic_id)));
