@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\ComicEmail;
 use App\Console\Commands\ComicScrape;
+use App\Console\Commands\DockerRun;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -29,7 +30,12 @@ class Kernel extends ConsoleKernel
         $schedule->command(ComicScrape::class)
             ->cron('0 7 * * *');
 
+        /*
         $schedule->command(ComicEmail::class)
+            ->cron('0 9 * * *');
+        */
+
+        $schedule->command(DockerRun::class)
             ->cron('0 9 * * *');
     }
 

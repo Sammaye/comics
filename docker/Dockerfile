@@ -12,7 +12,7 @@ ENV NODE_VERSION=10.x
 RUN apt-get -qq update \
     && apt-get -qq install software-properties-common \
     && apt-get -qq update \
-    && apt-get -qq install zip pkg-config libssl-dev
+    && apt-get -qq install zip pkg-config libssl-dev wget
 
 # OAuth has been built in a way that causes php version folders to be created under
 # /etc/php for 5.6, 7.0, 7.1, 7.2 and 7.3. It does not install these versions, instead
@@ -48,6 +48,17 @@ RUN apt-get --yes install build-essential \
 RUN add-apt-repository ppa:nginx/stable \
     && apt-get update \
     && apt-get --yes install nginx
+
+# This is to allow us to run mongodump and mongorestore on our php box
+RUN wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | apt-key add - \
+    && echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.4 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-4.4.list \
+    && apt-get update \
+    && apt-get install -y mongodb-database-tools
+
+# Setup cron
+COPY ./crontab /etc/cron.d/crontab
+RUN chmod 0644 /etc/cron.d/crontab \
+    && crontab /etc/cron.d/crontab
 
 # Copying here allows us to reuse cached layers when configuration files change
 

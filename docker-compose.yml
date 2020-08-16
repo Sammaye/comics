@@ -13,6 +13,7 @@ services:
     volumes:
       - ./:/var/www/html
       - ./docker/nginx/log:/var/log/nginx
+      - ./docker/crontab.log:/var/log/crontab.log
     ports:
       - 8000:80
 
