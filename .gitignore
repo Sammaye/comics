@@ -76,3 +76,4 @@ npm-debug.log
 yarn-error.log
 
 docker/nginx/log
+config/credentials.json
