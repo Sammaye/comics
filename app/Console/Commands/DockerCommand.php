@@ -38,7 +38,7 @@ class DockerCommand extends Command
     public function getGoogleClient()
     {
         $client = new Google_Client();
-        $client->setApplicationName('Google Drive API PHP Quickstart');
+        $client->setApplicationName('Comics App');
         $client->setScopes(Google_Service_Drive::DRIVE);
         $client->setAuthConfig(base_path('config/credentials.json'));
         $client->setAccessType('offline');
