@@ -49,7 +49,7 @@ class DockerDump extends DockerCommand
             exit(1);
         }
 
-        if (!$this->upsertGoogleDriveFile($dumpName, file_get_contents($dumpPath))) {
+        if (!$this->upsertLargeGoogleDriveFile($dumpName, $dumpPath)) {
             // Error
             exit(1);
         }

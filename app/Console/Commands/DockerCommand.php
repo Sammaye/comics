@@ -4,13 +4,20 @@ namespace App\Console\Commands;
 
 use Exception;
 use Google_Client;
+use Google_Http_MediaFileUpload;
 use Google_Service_Drive;
 use Google_Service_Drive_DriveFile;
 use Illuminate\Console\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 
 class DockerCommand extends Command
 {
     public $name = 'DockerCommand';
+
+    /**
+     * @var Google_Client|null
+     */
+    public $googleClient;
 
     /**
      * @var Google_Service_Drive|null
@@ -24,8 +31,8 @@ class DockerCommand extends Command
     public function getGoogleService()
     {
         if ($this->googleService === null) {
-            $client = self::getGoogleClient();
-            $this->googleService = new Google_Service_Drive($client);
+            $this->googleClient = self::getGoogleClient();
+            $this->googleService = new Google_Service_Drive($this->googleClient);
         }
         return $this->googleService;
     }
@@ -123,6 +130,108 @@ class DockerCommand extends Command
 
     /**
      * @param $name
+     * @param $filePath
+     * @param string $mimeType
+     * @return mixed
+     * @throws \Google_Exception
+     */
+    public function upsertLargeGoogleDriveFile($name, $filePath, $mimeType = 'text/plain')
+    {
+        $this->getGoogleService();
+
+        $optParams = array(
+            'pageSize' => 10,
+            'fields' => 'nextPageToken, files(id, name, trashed)',
+            'q' => "name = '"  . $name . "' and trashed = false",
+        );
+        $results = $this->googleService->files->listFiles($optParams);
+
+        $this->googleClient->setDefer(true);
+
+        $drive_file = new Google_Service_Drive_DriveFile();
+        $drive_file->setName($name);
+
+        $chunkSizeBytes = 100 * 1024 * 1024;
+        $filesize = filesize($filePath);
+        $chunkCount = $filesize/$chunkSizeBytes;
+
+        $bar = $this->output->createProgressBar(ceil($chunkCount));
+        $bar->setFormat(' %current%/%max% [%bar%] %percent:3s%% %elapsed:6s%/%estimated:-6s% %memory:6s%');
+
+        if (count($results->getFiles()) == 0) {
+            $this->info(__('Creating file...'));
+
+            $request = $this->googleService->files->create($drive_file);
+        } else {
+            foreach ($results->getFiles() as $file) {
+                if ($file->getName() === $name) {
+                    $id =  $file->getId();
+
+                    $this->info(__('Updating file :id...', ['id' => $id]));
+
+                    $request = $this->googleService->files->update($id, $drive_file);
+                }
+            }
+        }
+
+        $media = new Google_Http_MediaFileUpload(
+            $this->googleClient,
+            $request,
+            $mimeType,
+            null,
+            true,
+            $chunkSizeBytes
+        );
+        $media->setFileSize($filesize);
+
+        $this->info(__('Starting upload...'));
+
+        // Upload the various chunks. $status will be false until the process is
+        // complete.
+        $status = false;
+        $handle = fopen($filePath, "rb");
+        while (!$status && !feof($handle)) {
+            $chunk = $this->readFileChunk($handle, $chunkSizeBytes);
+            $status = $media->nextChunk($chunk);
+            $bar->advance();
+        }
+
+        // The final value of $status will be the data from the API for the object
+        // that has been uploaded.
+        $result = false;
+        if ($status != false) {
+            $result = $status;
+        }
+
+        fclose($handle);
+
+        if ($result instanceof Google_Service_Drive_DriveFile) {
+            return $result->getId();
+        }
+
+        return false;
+    }
+
+    private function readFileChunk ($handle, $chunkSize)
+    {
+        $byteCount = 0;
+        $giantChunk = "";
+        while (!feof($handle)) {
+            // fread will never return more than 8192 bytes if the stream
+            // is read buffered and it does not represent a plain file
+            $chunk = fread($handle, 8192);
+            $byteCount += strlen($chunk);
+            $giantChunk .= $chunk;
+            if ($byteCount >= $chunkSize)
+            {
+                return $giantChunk;
+            }
+        }
+        return $giantChunk;
+    }
+
+    /**
+     * @param $name
      * @return false|Google_Service_Drive_DriveFile
      * @throws \Google_Exception
      */
@@ -137,9 +246,7 @@ class DockerCommand extends Command
         );
         $results = $this->googleService->files->listFiles($optParams);
 
-        if (count($results->getFiles()) == 0) {
-            return false;
-        } else {
+        if (count($results->getFiles()) !== 0) {
             foreach ($results->getFiles() as $file) {
                 /** @var Google_Service_Drive_DriveFile $file */
                 if ($file->getName() === $name) {
@@ -149,5 +256,77 @@ class DockerCommand extends Command
                 }
             }
         }
+        return false;
+    }
+
+    /**
+     * @param $name
+     * @return false|Google_Service_Drive_DriveFile
+     * @throws \Google_Exception
+     */
+    public function getLargeGoogleDriveFile($name)
+    {
+        $this->getGoogleService();
+
+        $filePath = storage_path($name);
+
+        $optParams = array(
+            'pageSize' => 10,
+            'fields' => 'nextPageToken, files(id, name, trashed, webContentLink, size)',
+            'q' => "name = '"  . $name . "' and trashed = false",
+        );
+        $results = $this->googleService->files->listFiles($optParams);
+
+        if (count($results->getFiles()) !== 0) {
+            foreach ($results->getFiles() as $file) {
+                /** @var Google_Service_Drive_DriveFile $file */
+                if ($file->getName() === $name) {
+                    $fileId = $file->getId();
+                    $fileSize = $file->getSize();
+
+                    $this->info(__('Downloading file :id...', ['id' => $fileId]));
+
+                    // Get the authorized Guzzle HTTP client
+                    $http = $this->googleClient->authorize();
+
+                    // Open a file for writing
+                    $fp = fopen($filePath, 'w');
+
+                    // Download in 100 MB chunks
+                    $chunkSizeBytes = 100 * 1024 * 1024;
+                    $chunkStart = 0;
+
+                    $chunkCount = ceil($fileSize/$chunkSizeBytes);
+
+                    $bar = $this->output->createProgressBar($chunkCount);
+                    $bar->setFormat(' %current%/%max% [%bar%] %percent:3s%% %elapsed:6s%/%estimated:-6s% %memory:6s%');
+
+                    // Iterate over each chunk and write it to our file
+                    while ($chunkStart < $fileSize) {
+                        $chunkEnd = $chunkStart + $chunkSizeBytes;
+                        $response = $http->request(
+                            'GET',
+                            sprintf('/drive/v3/files/%s', $fileId),
+                            [
+                                'query' => ['alt' => 'media'],
+                                'headers' => [
+                                    'Range' => sprintf('bytes=%s-%s', $chunkStart, $chunkEnd)
+                                ]
+                            ]
+                        );
+                        $chunkStart = $chunkEnd + 1;
+                        fwrite($fp, $response->getBody()->getContents());
+
+                        $bar->advance();
+                    }
+                    // close the file pointer
+                    fclose($fp);
+
+                    return $file;
+                }
+            }
+        }
+
+        return false;
     }
 }

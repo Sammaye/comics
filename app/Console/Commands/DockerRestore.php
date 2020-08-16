@@ -41,7 +41,7 @@ class DockerRestore extends DockerCommand
         $dumpName = 'dump';
         $dumpPath =  storage_path($dumpName);
 
-        if (!$this->getGoogleDriveFile($dumpName)) {
+        if (!$this->getLargeGoogleDriveFile($dumpName)) {
             // Error
             exit(1);
         }
