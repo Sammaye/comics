@@ -16,6 +16,8 @@ services:
       - ./docker/crontab.log:/var/log/crontab.log
     ports:
       - 8000:80
+    restart:
+      unless-stopped
 
   mysql:
     image: mysql:5.7
@@ -43,6 +45,8 @@ services:
       --config /etc/mongod.conf
     ports:
       - 8002:27017
+    restart:
+      unless-stopped
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
