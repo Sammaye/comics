@@ -7,6 +7,7 @@ use App\ComicStrip;
 use Carbon\Carbon;
 use danielme85\LaravelLogToDB\LogToDB;
 use Illuminate\Console\Command;
+use MongoDB\BSON\ObjectId;
 
 class DockerTrim extends Command
 {
@@ -44,6 +45,7 @@ class DockerTrim extends Command
         $comicStripsDeleted = 0;
 
         $comics = Comic::query()
+            ->where('_id', '!=', new ObjectId('545aa65d6803fa64038b4567'))
             ->get();
 
         foreach ($comics as $comic) {
