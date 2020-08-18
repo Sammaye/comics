@@ -19,14 +19,14 @@ $lastComicTitle = null;
         @elseif (is_array($comicStrip->img))
             <a href="<?= $comicStrip->url ?>" rel="nofollow" target="_blank">
                 @foreach ($comicStrip->img as $k => $img)
-                    <img src="{{ route('comic.image', ['comicStrip' => $comicStrip, 'index' => $k]) }}"
+                    <img src="{{ $message->embed('http://localhost/' . route('comic.image', ['comicStrip' => $comicStrip, 'index' => $k], false)) }}"
                          style="border:0;"
                     />
                 @endforeach
             </a>
         @else
             <a href="{{ $comicStrip->comic->indexUrl($comicStrip->index, 'http') }}" rel="nofollow" target="_blank">
-                <img src="{{ route('comic.image', ['comicStrip' => $comicStrip]) }}"
+                <img src="{{ $message->embed('http://localhost/' . route('comic.image', ['comicStrip' => $comicStrip], false)) }}"
                      style="border:0;"
                 />
             </a>
