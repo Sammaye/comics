@@ -2,12 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Comic;
 use App\ComicStrip;
 use Carbon\Carbon;
 use danielme85\LaravelLogToDB\LogToDB;
 use Illuminate\Console\Command;
-
-use MongoDB\BSON\UTCDateTime;
 
 class DockerTrim extends Command
 {
@@ -42,9 +41,23 @@ class DockerTrim extends Command
      */
     public function handle()
     {
-        $comicStripsDeleted = ComicStrip::query()
-            ->where('created_at', '<', new Carbon('-1 month'))
-            ->delete();
+        $comicStripsDeleted = 0;
+
+        $comics = Comic::query()
+            ->get();
+
+        foreach ($comics as $comic) {
+            $latest = ComicStrip::query()
+                ->select(['_id', 'title', 'created_at'])
+                ->where('comic_id', $comic->_id)
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+            $comicStripsDeleted += ComicStrip::query()
+                ->where('created_at', '<', $latest->created_at->subtract('1 month'))
+                ->where('comic_id', $comic->_id)
+                ->delete();
+        }
 
         $logEntriesDeleted = LogToDB::model(
             null,
