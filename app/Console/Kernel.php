@@ -27,8 +27,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $logPath = '/var/log/crontab.log';
+
         $schedule->command(ComicScrape::class)
-            ->cron('0 7 * * *');
+            ->cron('0 9 * * *')
+            ->sendOutputTo($logPath, true);
 
         /*
         $schedule->command(ComicEmail::class)
@@ -36,7 +39,8 @@ class Kernel extends ConsoleKernel
         */
 
         $schedule->command(DockerRun::class)
-            ->cron('0 9 * * *');
+            ->cron('0 10 * * *')
+            ->sendOutputTo($logPath, true);
     }
 
     /**

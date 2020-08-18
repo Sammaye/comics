@@ -42,7 +42,8 @@ class ComicScrape extends Command
      */
     public function handle()
     {
-        $query = Comic::query();
+        $query = Comic::query()
+            ->where('live', 1);
 
         if ($this->argument('id')) {
             $query->where('_id', $this->argument('id'))

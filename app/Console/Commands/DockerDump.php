@@ -38,7 +38,7 @@ class DockerDump extends DockerCommand
         $output = null;
         $return_var = null;
 
-        $dumpName = 'dump';
+        $dumpName = config('database.mongodb_dump_name');
         $dumpPath =  storage_path($dumpName);
 
         $command = sprintf('mongodump --host=%s --db=%s --archive=%s', 'mongodb', 'comics', $dumpPath);

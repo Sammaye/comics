@@ -148,4 +148,5 @@ return [
 
     ],
 
+    'mongodb_dump_name' => env('MONGODB_DUMP_NAME', 'mongodb_dump'),
 ];

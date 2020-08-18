@@ -247,5 +247,4 @@ return [
     ],
 
     'support_email' => 'comics@sammaye.com',
-
 ];
