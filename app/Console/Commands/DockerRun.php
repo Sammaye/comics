@@ -38,6 +38,7 @@ class DockerRun extends Command
      */
     public function handle()
     {
+        Artisan::call('comic:scrape');
         Artisan::call('comic:email');
         Artisan::call('docker:dump');
     }

@@ -5,8 +5,11 @@ namespace App\Console;
 use App\Console\Commands\ComicEmail;
 use App\Console\Commands\ComicScrape;
 use App\Console\Commands\DockerRun;
+use App\User;
+use Carbon\Carbon;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use MongoDB\BSON\ObjectId;
 
 class Kernel extends ConsoleKernel
 {
@@ -29,17 +32,25 @@ class Kernel extends ConsoleKernel
     {
         $logPath = '/var/log/crontab.log';
 
-        $schedule->command(ComicScrape::class)
-            ->cron('0 9 * * *')
-            ->sendOutputTo($logPath, true);
+        $admin_user = User::query()
+            ->where('_id', new ObjectId('544c189d6803fa85038b4567'))
+            ->firstOrFail();
 
-        /*
-        $schedule->command(ComicEmail::class)
-            ->cron('0 9 * * *');
-        */
+        $time = '0 9 * * *';
+
+        if (
+            // Has not been sent today
+            $admin_user->last_feed_sent->toDateTime()->getTimestamp() < (new Carbon('-1 day'))->getTimestamp() &&
+            // Is waaaaay past when it should be sent, like 12pm
+            (int)(new \DateTime())->format('H') >= 12
+        ) {
+            // Then schedule it to be sent asap
+            $next_hour = (new \DateTime('+1 hour'))->format('H');
+            $time = "0 $next_hour * * *";
+        }
 
         $schedule->command(DockerRun::class)
-            ->cron('0 10 * * *')
+            ->cron($time)
             ->sendOutputTo($logPath, true);
     }
 
