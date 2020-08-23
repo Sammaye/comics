@@ -41,12 +41,19 @@ class Kernel extends ConsoleKernel
         if (
             // Has not been sent today
             $admin_user->last_feed_sent->toDateTime()->getTimestamp() < (new Carbon('-1 day'))->getTimestamp() &&
-            // Is waaaaay past when it should be sent, like 12pm
-            (int)(new \DateTime())->format('H') >= 12
+            // Is waaaaay past when it should be sent, like 10am
+            (int)(new \DateTime())->format('H') >= 10
         ) {
             // Then schedule it to be sent asap
-            $next_hour = (new \DateTime('+1 hour'))->format('H');
-            $time = "0 $next_hour * * *";
+            if ((int)(new \DateTime())->format('i') !== 0) {
+                // If it does not equal 0 minute of the hour then
+                // schedule it for the next 0 minute of the next hour
+                $hour = (new \DateTime('+1 hour'))->format('G');
+            } else {
+                // If it is 0 then use this hour now
+                $hour = (new \DateTime())->format('G');
+            }
+            $time = "0 $hour * * *";
         }
 
         $schedule->command(DockerRun::class)
