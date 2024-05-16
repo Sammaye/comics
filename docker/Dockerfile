@@ -1,10 +1,10 @@
-FROM ubuntu:bionic
+FROM ubuntu:noble
 
 # Only for build else might confuse others who run apt-get
 ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe
 ENV ENVIRONMENT=development;
-ENV PHP_VERSION=7.2
+ENV PHP_VERSION=7.4
 ENV NODE_VERSION=10.x
 
 # This can still generate noise, I have investigated the reason and some say a hack works but many
@@ -12,7 +12,7 @@ ENV NODE_VERSION=10.x
 RUN apt-get -qq update \
     && apt-get -qq install software-properties-common \
     && apt-get -qq update \
-    && apt-get -qq install zip pkg-config libssl-dev wget
+    && apt-get -qq install zip pkg-config libssl-dev wget cron
 
 # OAuth has been built in a way that causes php version folders to be created under
 # /etc/php for 5.6, 7.0, 7.1, 7.2 and 7.3. It does not install these versions, instead
@@ -20,7 +20,6 @@ RUN apt-get -qq update \
 RUN add-apt-repository ppa:ondrej/php \
     && apt-get -qq update \
     && apt-get --yes install php${PHP_VERSION}-fpm \
-    php${PHP_VERSION}-cli \
     php${PHP_VERSION}-curl \
     php${PHP_VERSION}-gd \
     php${PHP_VERSION}-zip \
@@ -45,9 +44,7 @@ RUN apt-get --yes install build-essential \
     && curl -sL https://deb.nodesource.com/setup_${NODE_VERSION} | bash - \
     && apt-get --yes install nodejs
 
-RUN add-apt-repository ppa:nginx/stable \
-    && apt-get update \
-    && apt-get --yes install nginx
+RUN apt-get --yes install nginx
 
 # This is to allow us to run mongodump and mongorestore on our php box
 RUN wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | apt-key add - \

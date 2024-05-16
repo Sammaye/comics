@@ -9,7 +9,7 @@ services:
       - mongo-express
       - mail
     environment:
-      PHP_VERSION: 7.2
+      PHP_VERSION: 7.4
     volumes:
       - ./:/var/www/html
       - ./docker/nginx/log:/var/log/nginx
